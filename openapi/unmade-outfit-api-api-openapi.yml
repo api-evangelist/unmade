@@ -1,0 +1,474 @@
+openapi: 3.0.3
+info:
+  title: Unmade Integration Reference Design API Outfit API API
+  version: 1.0.0
+  description: 'Welcome to the Unmade OS Integration Reference.
+
+
+    See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.'
+  x-apievangelist:
+    generated: '2026-07-21'
+    method: derived
+    source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary.apib
+    note: Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file.
+servers:
+- url: https://partner-subdomain.embed.unmade.com/
+security:
+- tokenAuth: []
+tags:
+- name: Outfit API
+paths:
+  /v2/outfits/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  outfit_spec:
+                    type: string
+                  editor_user:
+                    type: string
+                  created:
+                    type: string
+                  pieces:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        slot_slug:
+                          type: string
+                        design_id:
+                          type: string
+                      required:
+                      - id
+                      - slot_slug
+                      - design_id
+                  previews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        image:
+                          type: string
+                        thumbnail:
+                          type: string
+                  scenes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        url:
+                          type: string
+              example:
+                id: f00f9780-e026-42f5-9876-41abb3619334
+                name: My Outfit
+                outfit_spec: my-outfit-spec
+                editor_user: 3fad6a89-8cec-4350
+                created: '2024-01-15T10:30:00Z'
+                pieces:
+                - id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                  slot_slug: top
+                  design_id: 8a2b6517-e020-46fd-8cd0-ec441d4ac4b4
+                - id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+                  slot_slug: bottom
+                  design_id: 5e39f63b-a084-4d80-ae29-1fdb87a79922
+                previews:
+                - name: front
+                  image: https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/
+                  thumbnail: https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/
+                scenes:
+                - name: default
+                  url: https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  detail:
+                    type: object
+                    properties:
+                      pieces:
+                        type: string
+              example:
+                code: bad_request
+                message: Invalid input.
+                detail:
+                  pieces: 'Missing pieces for slots: bottom.'
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+        '403':
+          description: Forbidden
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: permission_denied
+                message: You do not have permission to perform this action.
+      summary: Create an Outfit
+      operationId: createOutfits
+      description: "Creates a new outfit from a set of designs, one per slot defined by the given outfit spec.\n\nAll slots defined in the outfit spec must be provided. Providing an unknown slot or supplying two pieces for the same \nslot will return a 400 error."
+      tags:
+      - Outfit API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              outfit_spec: my-outfit-spec
+              name: My Outfit
+              editor_user: 3fad6a89-8cec-4350
+              pieces:
+              - slot_slug: top
+                design_id: 8a2b6517-e020-46fd-8cd0-ec441d4ac4b4
+              - slot_slug: bottom
+                design_id: 5e39f63b-a084-4d80-ae29-1fdb87a79922
+            schema:
+              type: object
+              properties:
+                outfit_spec:
+                  type: string
+                  description: Slug of the Outfit Spec to use. Defines which slots must be filled.
+                name:
+                  type: string
+                  description: A human-readable label for this outfit.
+                ? editor_user (string, optional) - The `external_id` of an existing EditorUser to associate with this outfit. Used to link the outfit to a specific end
+                : type: string
+                  description: user.
+                pieces:
+                  type: array
+                  description: One object per slot in the outfit spec.
+                  items: {}
+              required:
+              - outfit_spec
+              - pieces
+  /v2/outfits/{outfit_id}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  outfit_spec:
+                    type: string
+                  editor_user:
+                    type: string
+                  created:
+                    type: string
+                  pieces:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        slot_slug:
+                          type: string
+                        design_id:
+                          type: string
+                      required:
+                      - id
+                      - slot_slug
+                      - design_id
+                  previews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        image:
+                          type: string
+                        thumbnail:
+                          type: string
+                  scenes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        url:
+                          type: string
+              example:
+                id: f00f9780-e026-42f5-9876-41abb3619334
+                name: My Outfit
+                outfit_spec: my-outfit-spec
+                editor_user: 3fad6a89-8cec-4350
+                created: '2024-01-15T10:30:00Z'
+                pieces:
+                - id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                  slot_slug: top
+                  design_id: 8a2b6517-e020-46fd-8cd0-ec441d4ac4b4
+                - id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+                  slot_slug: bottom
+                  design_id: 5e39f63b-a084-4d80-ae29-1fdb87a79922
+                previews:
+                - name: front
+                  image: https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/
+                  thumbnail: https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/
+                scenes:
+                - name: default
+                  url: https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+        '403':
+          description: Forbidden
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: permission_denied
+                message: You do not have permission to perform this action.
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+      summary: Retrieve an Outfit
+      operationId: getOutfits
+      description: Returns the full representation of an outfit, including its pieces, previews, and any available 3D scenes.
+      tags:
+      - Outfit API
+      parameters:
+      - name: outfit_id
+        in: path
+        description: ID of the Outfit in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/outfits/{outfit_id}/previews/{preview_id}/preview/:
+    get:
+      responses:
+        '308':
+          description: Permanent Redirect
+          headers: {}
+          content: {}
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+      summary: Outfit Preview
+      operationId: getOutfitsPreviewsPreview
+      description: Returns the full-size rendered image of the outfit for this preview.
+      tags:
+      - Outfit API
+      parameters:
+      - name: outfit_id
+        in: path
+        description: ID of the Outfit
+        required: true
+        schema:
+          type: string
+      - name: preview_id
+        in: path
+        description: ID of the OutfitPreview (obtained from the `previews` array on the outfit)
+        required: true
+        schema:
+          type: string
+  /v2/outfits/{outfit_id}/previews/{preview_id}/thumbnail/:
+    get:
+      responses:
+        '308':
+          description: Permanent Redirect
+          headers: {}
+          content: {}
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+      summary: Outfit Thumbnail
+      operationId: getOutfitsPreviewsThumbnail
+      description: Returns a smaller thumbnail version of the outfit preview image.
+      tags:
+      - Outfit API
+      parameters:
+      - name: outfit_id
+        in: path
+        description: ID of the Outfit
+        required: true
+        schema:
+          type: string
+      - name: preview_id
+        in: path
+        description: ID of the OutfitPreview (obtained from the `previews` array on the outfit)
+        required: true
+        schema:
+          type: string
+  /v2/outfits/{outfit_id}/3d/{avatar_scene_slug}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+      summary: 3D View
+      operationId: getOutfits3d
+      description: ''
+      tags:
+      - Outfit API
+      parameters:
+      - name: outfit_id
+        in: path
+        description: ID of the Outfit
+        required: true
+        schema:
+          type: string
+      - name: avatar_scene_slug
+        in: path
+        description: Slug of the avatar scene (obtained from the `scenes` array on the outfit)
+        required: true
+        schema:
+          type: string
+      - name: autosize
+        in: query
+        description: If true, the canvas resizes to fit the browser viewport.
+        schema:
+          type: boolean
+      - name: interactive
+        in: query
+        description: If true, the model has limited mouse interactivity. Defaults to false.
+        schema:
+          type: boolean
+      - name: autorotate
+        in: query
+        description: If provided, the model automatically rotates at 360 degrees in N seconds.
+        schema:
+          type: number
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash.'

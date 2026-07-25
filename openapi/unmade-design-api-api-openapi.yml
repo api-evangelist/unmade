@@ -1,0 +1,855 @@
+openapi: 3.0.3
+info:
+  title: Unmade Integration Reference Design API API
+  version: 1.0.0
+  description: 'Welcome to the Unmade OS Integration Reference.
+
+
+    See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.'
+  x-apievangelist:
+    generated: '2026-07-21'
+    method: derived
+    source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary.apib
+    note: Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file.
+servers:
+- url: https://partner-subdomain.embed.unmade.com/
+security:
+- tokenAuth: []
+tags:
+- name: Design API
+paths:
+  /v1/designs/{design_id}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Request payload is not valid.
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+                original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
+      summary: Retrieve a design
+      operationId: getDesigns
+      description: ''
+      tags:
+      - Design API
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of a uuid
+        required: true
+        schema:
+          type: string
+  /v1/designs/base_design_id/roster/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: string
+              example: c9b86945-45a6-4a43-beaf-361a7f0d8a77
+        '400':
+          description: Bad Request
+          headers: {}
+          content: {}
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+                original_request: <the original request that was sent, which resulted in this error>
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+                original_request: <the original request that was sent, which resulted in this error>
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+                original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
+      summary: Create a member design
+      operationId: createDesignsBaseDesignIdRoster
+      description: '#### Roster field rules
+
+
+        To create a member design, a single `roster_member` object containing the required
+
+        values for all roster fields in the template roster design is provided:'
+      tags:
+      - Design API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              roster_member:
+                <roster_field_a>: foo
+                <roster_field_b: '99'
+            schema:
+              type: object
+              properties:
+                roster_member:
+                  type: object
+                  properties:
+                    <roster_field_a>:
+                      type: string
+                    <roster_field_b:
+                      type: string
+  /v2/designs/{design_id}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Request payload is not valid.
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+      summary: Retrieve a design
+      operationId: getDesigns
+      description: ''
+      tags:
+      - Design API
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of a uuid
+        required: true
+        schema:
+          type: string
+  /v2/designs/{design_id}/3d/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+      summary: 3D View
+      operationId: getDesigns3d
+      description: ''
+      tags:
+      - Design API
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: scene
+        in: query
+        description: The name of the camera position to load. If not provided, load the default camera position of the model.
+        schema:
+          type: string
+      - name: autosize
+        in: query
+        description: If true, the canvas will be resized to fit the browser viewport and will resize if changed. If not provided, the canvas will remain at a fixed default size.
+        schema:
+          type: boolean
+      - name: interactive
+        in: query
+        description: If true, the model will have some limited mouse interactivity. Defaults to false.
+        schema:
+          type: boolean
+      - name: autorotate
+        in: query
+        description: If provided, the model will automatically rotate at a rate of 360 degrees in N seconds.
+        schema:
+          type: number
+  /v2/designs/{design_id}/clear_placements/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              example:
+                id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              example:
+                error: Design has no non-optional placements
+      summary: Clear Placements
+      operationId: designsClearPlacements
+      description: ''
+      tags:
+      - Design API
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/designs/{design_id}/clear_user_uploaded_placements/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              example:
+                id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              example:
+                error: Design has no user-uploaded content
+      summary: Clear User Uploaded Placements
+      operationId: designsClearUserUploadedPlacements
+      description: ''
+      tags:
+      - Design API
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/designs/{design_id}/clone/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              example:
+                id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  size:
+                    type: array
+                    items:
+                      type: string
+              example:
+                size:
+                - 'Size M does not exist on product my-product. Available sizes: S, L, XL'
+      summary: Clone Design
+      operationId: designsClone
+      description: ''
+      tags:
+      - Design API
+      parameters:
+      - name: design_id
+        in: path
+        description: ID of the Design in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              size: M
+            schema:
+              type: object
+              properties:
+                size:
+                  type: string
+                  description: A valid size for the product this design belongs to (e.g. `S`, `M`, `L`).
+              required:
+              - size
+  /v2/collections/{slug}/transfer_designs/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  designs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        product_slug:
+                          type: string
+                        id:
+                          type: string
+                      required:
+                      - product_slug
+                      - id
+              example:
+                designs:
+                - product_slug: product-b
+                  id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                - product_slug: product-c
+                  id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  design_id:
+                    type: array
+                    items:
+                      type: string
+              example:
+                design_id:
+                - Design 8a2b6517-e020-46fd-8cd0-ec441d4ac4b4 does not exist.
+      summary: Transfer Designs
+      operationId: createCollectionsTransferDesigns
+      description: ''
+      tags:
+      - Design API
+      parameters:
+      - name: slug
+        in: path
+        description: Slug of the Collection
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              design_id: 8a2b6517-e020-46fd-8cd0-ec441d4ac4b4
+            schema:
+              type: object
+              properties:
+                design_id:
+                  type: string
+  /v2/designs/base_design_id/roster/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              example:
+                id: c9b86945-45a6-4a43-beaf-361a7f0d8a77
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  detail:
+                    type: object
+                    properties:
+                      last-name:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            error:
+                              type: string
+                            details:
+                              type: object
+                              properties:
+                                amended_text:
+                                  type: string
+                          required:
+                          - error
+                          - details
+                      number:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            error:
+                              type: string
+                            details:
+                              type: object
+                              properties:
+                                amended_text:
+                                  type: string
+              example:
+                code: bad_request
+                message: Request payload is not valid.
+                detail:
+                  last-name:
+                  - error: text_too_wide
+                    details:
+                      amended_text: shorter text
+                  - error: text_sanitised
+                    details:
+                      amended_text: sanitised text
+                  number:
+                  - error: illegal_characters
+                    details:
+                      amended_text: text with no illegal chars
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+      summary: Create a member design
+      operationId: createDesignsBaseDesignIdRoster
+      description: "#### Roster field rules\n\nTo create a member design, a single `roster_member` object containing the required values for all roster fields in the \ntemplate roster design is provided:"
+      tags:
+      - Design API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              roster_member:
+                <roster_field_a>: foo
+                <roster_field_b: '99'
+            schema:
+              type: object
+              properties:
+                roster_member:
+                  type: object
+                  properties:
+                    <roster_field_a>:
+                      type: string
+                    <roster_field_b:
+                      type: string
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash.'

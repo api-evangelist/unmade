@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: Unmade Integration Reference Design API Unmade Editor API
+  version: 1.0.0
+  description: 'Welcome to the Unmade OS Integration Reference.
+
+
+    See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.'
+  x-apievangelist:
+    generated: '2026-07-21'
+    method: derived
+    source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary.apib
+    note: Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file.
+servers:
+- url: https://partner-subdomain.embed.unmade.com/
+security:
+- tokenAuth: []
+tags:
+- name: Unmade Editor
+paths:
+  /v1/products/{slug}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+                original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
+        '429':
+          description: Too Many Requests
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: throttle_request
+                message: tRequest was throttled.
+      summary: Iframe endpoint
+      operationId: getProducts
+      description: 'The response to this request is a well-formed HTML document used as content for the `<iframe>`.
+
+
+        Use this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an
+
+        external e-commerce website.  Note that there are optional query parameters.
+
+
+        Depending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on the page. We are happy to advise and support on this.'
+      tags:
+      - Unmade Editor
+      parameters:
+      - name: slug
+        in: path
+        description: The product slug (will be agreed with you)
+        required: true
+        schema:
+          type: string
+      - name: price
+        in: query
+        description: The price to display for the product
+        schema:
+          type: number
+      - name: ccy
+        in: query
+        description: The ISO 4217 currency code corresponding to the `price`
+        schema:
+          type: string
+      - name: locale
+        in: query
+        description: The IETF language tag to set localisation of the user interface
+        schema:
+          type: string
+          default: en-GB
+      - name: design_id
+        in: query
+        description: An Unmade Design ID that is compatible with this editor to be used as starting point
+        schema:
+          type: string
+      - name: init
+        in: query
+        description: An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](https://engineering.unmade.com/api-docs/#/group-api-setup#header-advanced-setup) for more information.
+        schema:
+          type: string
+      - name: mode
+        in: query
+        description: Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design.
+        schema:
+          type: string
+  /v2/products/{slug}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+        '429':
+          description: Too Many Requests
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: throttle_request
+                message: tRequest was throttled.
+      summary: Iframe endpoint
+      operationId: getProducts
+      description: 'The response to this request is a well-formed HTML document used as content for the `<iframe>`.
+
+
+        Use this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an
+
+        external e-commerce website.  Note that there are optional query parameters.
+
+
+        Depending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on the page. We are happy to advise and support on this.'
+      tags:
+      - Unmade Editor
+      parameters:
+      - name: slug
+        in: path
+        description: The product slug (will be agreed with you)
+        required: true
+        schema:
+          type: string
+      - name: price
+        in: query
+        description: The price to display for the product
+        schema:
+          type: number
+      - name: ccy
+        in: query
+        description: The ISO 4217 currency code corresponding to the `price`
+        schema:
+          type: string
+      - name: locale
+        in: query
+        description: The IETF language tag to set localisation of the user interface
+        schema:
+          type: string
+          default: en-GB
+      - name: design_id
+        in: query
+        description: An Unmade Design ID that is compatible with this editor to be used as starting point
+        schema:
+          type: string
+      - name: init
+        in: query
+        description: An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](#/group-api-setup#header-advanced-setup) for more information.
+        schema:
+          type: string
+      - name: mode
+        in: query
+        description: Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design.
+        schema:
+          type: string
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash.'

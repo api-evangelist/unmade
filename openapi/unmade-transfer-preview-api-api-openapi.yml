@@ -1,0 +1,218 @@
+openapi: 3.0.3
+info:
+  title: Unmade Integration Reference Design API Transfer Preview API API
+  version: 1.0.0
+  description: 'Welcome to the Unmade OS Integration Reference.
+
+
+    See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.'
+  x-apievangelist:
+    generated: '2026-07-21'
+    method: derived
+    source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary.apib
+    note: Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file.
+servers:
+- url: https://partner-subdomain.embed.unmade.com/
+security:
+- tokenAuth: []
+tags:
+- name: Transfer Preview API
+paths:
+  /v1/transfer_previews/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  previews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        image:
+                          type: string
+                        thumbnail:
+                          type: string
+                      required:
+                      - name
+                      - image
+                      - thumbnail
+              example:
+                previews:
+                - name: front
+                  image: v1/transfer_previews/1/preview/
+                  thumbnail: v1/transfer_previews/1/thumbnail/
+                - name: back
+                  image: v1/transfer_previews/2/preview/
+                  thumbnail: v1/transfer_previews/2/thumbnail/
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+                original_request: <the original request that was sent, which resulted in this error>
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+      summary: Create Transfer Previews
+      operationId: transferPreviews
+      description: ''
+      tags:
+      - Transfer Preview API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              product: <product-slug>
+              design: <design-id>
+            schema:
+              type: object
+              properties:
+                product:
+                  type: string
+                design:
+                  type: string
+  /v2/transfer_previews/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content: {}
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+      summary: Create Transfer Previews
+      operationId: transferPreviews
+      description: ''
+      tags:
+      - Transfer Preview API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              product: <product-slug>
+              design: <design-id>
+            schema:
+              type: object
+              properties:
+                product:
+                  type: string
+                  description: Slug of the target product to render the design against.
+                design:
+                  type: string
+                  description: ID of the Design to use as the source.
+              required:
+              - product
+              - design
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash.'

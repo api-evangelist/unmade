@@ -1,0 +1,1774 @@
+openapi: 3.0.3
+info:
+  title: Unmade Integration Reference Design API Ecommerce Orders API API
+  version: 1.0.0
+  description: 'Welcome to the Unmade OS Integration Reference.
+
+
+    See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.'
+  x-apievangelist:
+    generated: '2026-07-21'
+    method: derived
+    source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary.apib
+    note: Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file.
+servers:
+- url: https://partner-subdomain.embed.unmade.com/
+security:
+- tokenAuth: []
+tags:
+- name: Ecommerce Orders API
+paths:
+  /v1/orders/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    id: c9b86945-45a6-4a43-beaf-361a7f0d8a77
+                example2:
+                  value:
+                    id: 25f5bcd3-ace3-4272-956b-f78fe55ab8f1
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    code: bad_request
+                    message: Request payload is not valid.
+                    original_request: <the original request that was sent, which resulted in this error>
+                example2:
+                  value:
+                    code: bad_request
+                    message: Request payload is not valid.
+                    original_request: <the original request that was sent, which resulted in this error>
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    code: authentication_failed
+                    message: Incorrect authentication credentials.
+                    original_request: <the original request that was sent, which resulted in this error>
+                example2:
+                  value:
+                    code: authentication_failed
+                    message: Incorrect authentication credentials.
+                    original_request: <the original request that was sent, which resulted in this error>
+        '403':
+          description: Forbidden
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    code: permission_denied
+                    message: You do not have permission to perform this action.
+                    original_request: <the original request that was sent, which resulted in this error>
+                example2:
+                  value:
+                    code: permission_denied
+                    message: You do not have permission to perform this action.
+                    original_request: <the original request that was sent, which resulted in this error>
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    code: method_not_allowed
+                    message: Method used is not allowed
+                    original_request: <the original request that was sent, which resulted in this error>
+                example2:
+                  value:
+                    code: method_not_allowed
+                    message: Method used is not allowed
+                    original_request: <the original request that was sent, which resulted in this error>
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    code: not_acceptable
+                    message: Could not satisfy the request Accept header.
+                    original_request: <the original request that was sent, which resulted in this error>
+                example2:
+                  value:
+                    code: not_acceptable
+                    message: Could not satisfy the request Accept header.
+                    original_request: <the original request that was sent, which resulted in this error>
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              examples:
+                example1:
+                  value:
+                    code: unsupported_media_type
+                    message: Unsupported media type in request.
+                    original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
+                example2:
+                  value:
+                    code: unsupported_media_type
+                    message: Unsupported media type in request.
+                    original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
+      summary: Create an Order
+      operationId: createOrders
+      description: "#### Order field rules\n\nFor an order to be created the following fields will need to be present:\n\n+ `reference` **required**: Cannot be blank and cannot exist already. Max chars: 256\n    + `shipping_address` **required object**: Object containing the following:\n        + `name` **required**: max chars: 256\n        + `address_1` **required**: max chars: 256\n        + `postal_code` **required**: max chars: 20\n        + `city` **required**: max chars: 256\n        + `country` **required**: must be an ISO 3166-1 country\n        + `company_name` *optional*: max chars: 256\n        + `address_2` *optional*: max chars: 256\n        + `country_area` *optional*: max chars: 128\n        + `phone` *optional*: max chars: 30\n        + `email` *optional*: max chars: 254\n    + `order_items` **required array**: Array where each item has:\n        + `design` **required**: The Unmade Design Id of the design to be ordered\n        + `reference` *optional*: Defaults to `\"\"`\n        + `quantity` *optional*: Defaults to *1*\n        + `unit_price` *optional*: Float with 10 maximum digits and 2 decimal places\n        + `currency` *optional*: Currency code in ISO 4217 format. Defaults to `USD`\n        + `options` *optional*: Object that can include:\n            + `size` *optional*: Pre-agreed values, usually: \"XXS\", \"XS\", \"S\", \"M\", \"L\", \"XL\", \"XXL\", \"3XL\", \"One Size\"\n            + `partner_data` *optional*: Undetermined key value pairs (order item level). These keys and values can be added to Unmade paperwork (job and/or order tickets) if the keys are configured in UnmadeOS\n    + `partner_data` *optional*: Undetermined key value pairs (order level). These keys and values can be added to Unmade paperwork (job and/or order tickets) if the keys are configured in UnmadeOS"
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              reference: YOUR ORDER REFERENCE
+              partner_data:
+                example_po_number: example_number
+                example_po_type: example_value
+                example_shipping_method: example_shipping_service
+              order_items:
+              - design: 3cd42fe8-7491-11e8-adc0-fa7ae01bbebc
+                reference: YOUR ORDER-ITEM 1 REFERENCE
+                quantity: 2
+                unit_price: 99.99
+                currency: USD
+                options:
+                  size: M
+                partner_data:
+                  barcode: '98323928238372'
+              shipping_address:
+                name: John Smith
+                company_name: unmade
+                address_1: 152 Strand
+                address_2: Somerset House
+                city: London
+                country_area: ''
+                postal_code: WC2R 1LA
+                country: GB
+                phone: ''
+            schema:
+              type: object
+              properties:
+                reference:
+                  type: string
+                partner_data:
+                  type: object
+                  properties:
+                    example_po_number:
+                      type: string
+                    example_po_type:
+                      type: string
+                    example_shipping_method:
+                      type: string
+                order_items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      design:
+                        type: string
+                      reference:
+                        type: string
+                      quantity:
+                        type: number
+                      unit_price:
+                        type: number
+                      currency:
+                        type: string
+                      options:
+                        type: object
+                        properties:
+                          size:
+                            type: string
+                      partner_data:
+                        type: object
+                        properties:
+                          barcode:
+                            type: string
+                shipping_address:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    company_name:
+                      type: string
+                    address_1:
+                      type: string
+                    address_2:
+                      type: string
+                    city:
+                      type: string
+                    country_area:
+                      type: string
+                    postal_code:
+                      type: string
+                    country:
+                      type: string
+                    phone:
+                      type: string
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                  next:
+                    type: string
+                  previous:
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        shipping_address:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            company_name:
+                              type: string
+                            address_1:
+                              type: string
+                            address_2:
+                              type: string
+                            city:
+                              type: string
+                            country_area:
+                              type: string
+                            postal_code:
+                              type: string
+                            country:
+                              type: string
+                            phone:
+                              type: string
+                        reference:
+                          type: string
+                        created:
+                          type: string
+                        state:
+                          type: string
+                        placeholder_logos:
+                          type: array
+                          items: {}
+                        partner_data:
+                          type: object
+                          properties: {}
+                        order_items:
+                          type: array
+                          items: {}
+                        tracking_number:
+                          type: string
+                        is_order_portal:
+                          type: boolean
+                        submitted_at:
+                          nullable: true
+                        ready_to_ship_at:
+                          nullable: true
+                        shipped_at:
+                          nullable: true
+                        factory_order_id:
+                          nullable: true
+              example:
+                count: 10
+                next: https://example.embed.unmade.com/v1/orders/?page=2
+                previous: null
+                results:
+                - id: 25f5bcd3-ace3-4272-956b-f78fe55ab8f1
+                  shipping_address:
+                    name: John Smith
+                    company_name: unmade
+                    address_1: 152 Strand
+                    address_2: Somerset House
+                    city: London
+                    country_area: ''
+                    postal_code: WC2R 1LA
+                    country: UK
+                    phone: ''
+                  reference: partner_order_reference
+                  created: '2018-04-11T17:20:04.991263Z'
+                  state: new
+                  placeholder_logos: []
+                  partner_data: {}
+                  order_items: []
+                  tracking_number: ''
+                  is_order_portal: false
+                  submitted_at: null
+                  ready_to_ship_at: null
+                  shipped_at: null
+                  factory_order_id: null
+      summary: List Orders
+      operationId: getOrders
+      description: 'This endpoint can be used to retrieve the complete list of all orders that have been created to date.
+
+
+        This endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query
+
+        parameter to select the desired page.
+
+
+        You can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD`
+
+        to filter the listed orders by their creation date.'
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v1/orders/{order_id}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Request payload is not valid.
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+        '403':
+          description: Forbidden
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: permission_denied
+                message: You do not have permission to perform this action.
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+                original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
+      summary: Retrieve an existing order
+      operationId: getOrders2
+      description: "If you want to receive information on an order, for example to check the order state or the list of placeholders used by any of the designs on the order.\n\n#### Order Response\n\nWhen an order The order response will contain the following fields:\n\n+ `id`: Order id on UnmadeOS\n    + `reference`: Your order reference\n    + `state`: State of the order on UnmadeOS\n    + `created`: Timestamp when the order was created on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `submitted_at`: Timestamp when the order was submitted on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `ready_to_ship_at`: Timestamp when the order was set as ready to ship on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `shipped_at`: Timestamp when the order was shipped on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `partner_data`:  Undetermined key value pairs sent on order creation\n    + `tracking_number`:  If the order has been shipped and the vendor has enter the tracking number\n    + `shipping_address`:  Object containing the address received\n    + `placeholder_logos`:  Array containing the placeholders logos used by any design present on the order, if none is present will be an empty array\n        + `original_logo_url`:  URL where the logo was uploaded and from where it can be retrieved\n        + `designs`: Array of designs that use the logo\n            + `design`:  Unmade Design ID\n            + `placements`:  Array of placement names of the design where the logo is used\n    + `order_items`: Array where each item has:\n        + `design`: Design id that corresponds with the line order in the exact size\n        + `reference`:  Optional reference sent defaults to `\"\"`\n        + `quantity`:  Positive number, defaults to *1* if none was sent\n        + `unit_price`:  Float with 10 maximum digits and 2 decimal places it can be null\n        + `currency`:  Currency code in ISO 4217 format. Defaults to `USD`\n        + `arrive_by_date`:  Timestamp for when the order needs to arrive to the customer on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n        + `ex_factory_date`:   Timestamp for when the order needs to leave the factory on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n        + `options`:  Object that includes the `size`\n        + `factory`:  Factory where the garment will be manufactured\n        + `partner_data`:  Undetermined key value pairs. It will contain the *UNMADE_SOURCE_DESIGN_ID* key automatically generated by UnmadeOS to track which was the base design for this order line item. And *UNMADE_ORDER_ITEM_DESIGN_ID* another key included automatically that represents the design of the line item with the size fulfilled and any roster customisations\n\n#### Order States\n\nAs an order progresses through its life-cycle it will adopt one of a number of order states.\nThe state of an order is provided on an order's `state` attribute and will be one of the\nfollowing values:\n\n+ `new`: This order has been received by Unmade, but is not in production yet\n    + `submitting`: This order is being sent to the factory for production\n    + `submitted`: This order has been sent to the factory for production\n    + `in_production`: The manufacturing of the order has started at the factory\n    + `ready_to_ship`: This order is waiting to be picked up at the factory\n    + `shipped`: The factory has marked this order as shipped\n    + `cancelled`: This order has been cancelled\n    + `hold`: This order is on hold\n    + `failed`: This order has failed. (Error state, please contact Unmade)\n\nIf you have set your factory up to provide a tracking number for each shipment\nvia Factory OMS then this information will be reflected in the `tracking_number`\nattribute of the order once it has been entered by the factory."
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v1/orders/{order_id}/manufacturing_files/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+                original_request: <the original request that was sent, which resulted in this error>
+        '403':
+          description: Forbidden
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: permission_denied
+                message: You do not have permission to perform this action.
+                original_request: <the original request that was sent, which resulted in this error>
+        '404':
+          description: Not Found
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_found
+                message: Not found.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+                original_request: <the original request that was sent, which resulted in this error>
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  original_request:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+                original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
+        '425':
+          description: Too Early
+          headers: {}
+          content: {}
+      summary: Retrieve manufacturing files from an Order
+      operationId: getOrdersManufacturingFiles
+      description: 'If you want to download the manufacturing files from an order.
+
+
+        Note: if the manufacturing files aren''t available, the keys `job_ticket` and `manufacture_files` will be `null`, this is because the manufacturing files are generated
+
+        asynchronously once the job is created.'
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/:
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+              example:
+                id: c9b86945-45a6-4a43-beaf-361a7f0d8a77
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Request payload is not valid.
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: authentication_failed
+                message: Incorrect authentication credentials.
+        '403':
+          description: Forbidden
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: permission_denied
+                message: You do not have permission to perform this action.
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: method_not_allowed
+                message: Method used is not allowed
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: not_acceptable
+                message: Could not satisfy the request Accept header.
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: unsupported_media_type
+                message: Unsupported media type in request.
+      summary: Create an Order
+      operationId: createOrders
+      description: "Once an order has been placed on the ecommerce platform, the Unmade system should be notified to begin the process of\ngenerating manufacturing files. To do this, pass a unique order reference, and one or more order items to this endpoint\nvia an HTTP POST request. Each item must reference an Unmade Design ID. The same Design ID can be used for multiple\norder items, if provided with different `size` values inside the `options` object. To order multiple identical garments\nin the same size, use the `quantity` value. Each item must also have a `unit_price` object with both a `value` and\n`currency` specified. Depending on the nature of your integration with Unmade, a `shipping_address` may also be required\nfor order creation.\n\nOptionally, arbitrary key-value pairs can be passed as a `partner_data` object at both the order and order item level. \nThis may be used by your system to provide your internal ID or similar reference for this order which may be relevant\nfor integration with your vendor. These key-value pairs will also be present on the manufacturing order and jobs \nassociated with this ecommerce order.\n\nIf you want to create the order and keep it on hold for subsequent updates to the `partner_data` you might do it by\nsending the boolean value for `set_order_on_hold` as `true`.\n\nYou may optionally provide a boolean value for the `is_test_order` field to indicate a given order is not a real\nproduction order. If this value is set to `true`, the order will be omitted from Unmade billing processes. Speak to your\nUnmade representative for more information about recommended integration testing procedures."
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              reference: YOUR UNIQUE ORDER REFERENCE
+              order_items:
+              - design: UNMADE-DESIGN-ID
+                reference: YOUR ORDER-ITEM REFERENCE
+                quantity: 2
+                unit_price:
+                  value: '99.99'
+                  currency: USD
+                options:
+                  size: M
+                partner_data:
+                  barcode: '98323928238372'
+              partner_data:
+                example_po_number: example_number
+                example_po_type: example_value
+              shipping_address:
+                name: John Smith
+                company_name: unmade
+                address_1: 152 Strand
+                address_2: Somerset House
+                city: London
+                postal_code: WC2R 1LA
+                country: GB
+                country_area: London
+                phone: 0123456789
+                email: john@smith.com
+            schema:
+              type: object
+              properties:
+                reference:
+                  type: string
+                  description: Your unique reference for this order. Max 256 characters.
+                order_items:
+                  type: array
+                  description: One or more items to include in the order.
+                  items: {}
+                partner_data:
+                  type: object
+                  properties: {}
+                  description: Arbitrary key-value pairs to associate with the order as a whole (e.g. PO number, shipping method).
+                shipping_address:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Recipient full name. Max 256 characters.
+                    company_name:
+                      type: string
+                      description: Company name. Max 256 characters.
+                    address_1:
+                      type: string
+                      description: First line of address. Max 256 characters.
+                    address_2:
+                      type: string
+                      description: Second line of address. Max 256 characters.
+                    city:
+                      type: string
+                      description: City. Max 256 characters.
+                    postal_code:
+                      type: string
+                      description: Postal or ZIP code. Max 20 characters.
+                    country:
+                      type: string
+                      description: ISO 3166-1 alpha-2 country code (e.g. `"GB"`).
+                    country_area:
+                      type: string
+                      description: State, province, or region. Max 128 characters.
+                    phone:
+                      type: string
+                      description: Phone number. Max 30 characters.
+                    email:
+                      type: string
+                      description: Email address. Max 256 characters.
+                  required:
+                  - name
+                  - address_1
+                  - city
+                  - postal_code
+                  - country
+                  - country_area
+                  description: Delivery address for the order.
+              required:
+              - reference
+              - order_items
+              - shipping_address
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: List Orders
+      operationId: getOrders
+      description: "This endpoint can be used to retrieve the complete list of all orders that have been created to date.\n\nThis endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to \nselect the desired page.\n\nYou can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter \nthe listed orders by their creation date."
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: state
+        in: query
+        description: Show orders with this state (see Order States section above for allowed values)
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: number
+      - name: created_before
+        in: query
+        description: Show orders created before this date (`YYYY-MM-DD`)
+        schema:
+          type: string
+      - name: created_after
+        in: query
+        description: Show orders created after this date (`YYYY-MM-DD`)
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  reference:
+                    type: string
+                  created:
+                    type: string
+                  submitted:
+                    type: string
+                  in_production:
+                    type: string
+                  ready_to_ship:
+                    nullable: true
+                  shipped:
+                    nullable: true
+                  num_items:
+                    type: number
+                  order_items:
+                    type: string
+                  shipping_address:
+                    type: string
+                  manufacturing_order:
+                    type: string
+                  partner_data:
+                    type: object
+                    properties:
+                      my_partner_data_key:
+                        type: string
+                  factory:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      slug:
+                        type: string
+                  state:
+                    type: string
+                  tracking_data:
+                    type: object
+                    properties:
+                      tracking_number:
+                        type: string
+                  is_order_portal:
+                    type: boolean
+                  is_test_order:
+                    type: boolean
+              example:
+                id: 2c9c3662-d679-4e13-bfdb-7c2580c80b46
+                reference: UMD12345
+                created: '2024-07-28T18:05:36.806548Z'
+                submitted: '2024-07-29T18:05:53.714553Z'
+                in_production: '2024-08-01T08:05:53.714553Z'
+                ready_to_ship: null
+                shipped: null
+                num_items: 12
+                order_items: https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/items/
+                shipping_address: https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/shipping_address/
+                manufacturing_order: https://factory.unmade.com/v2/orders/fd792895-1e32-41b1-90af-683f0cf9f753/
+                partner_data:
+                  my_partner_data_key: foo
+                factory:
+                  name: Factory A
+                  slug: factory-a
+                state: submitted
+                tracking_data:
+                  tracking_number: ''
+                is_order_portal: false
+                is_test_order: false
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Retrieve an existing order
+      operationId: getOrders2
+      description: "After an order has been created, this endpoint can be used to retrieve order data for example to check the order state.\n\nDepending on the nature of your integration with Unmade, the contents of the `tracking_data` object may also update as \norders progress through the various production states."
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/partner_data/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  my_partner_data_key:
+                    type: string
+                  another-key:
+                    type: string
+              example:
+                my_partner_data_key: foo
+                another-key: bar
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Retrieve an existing order Partner Data
+      operationId: getOrdersPartnerData
+      description: After an order has been created, this endpoint can be used to retrieve the contents of partner data of the order.
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+    patch:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  previous_key:
+                    type: string
+                  key1:
+                    type: string
+                  key2:
+                    type: string
+              example:
+                previous_key: value_a
+                key1: value_x
+                key2: value_y
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Partner data is not available for updates in order state
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Add key/values to Partner Data for existing order
+      operationId: patchOrdersPartnerData
+      description: When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order.
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              key1: value_x
+              key2: value_y
+    put:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key1:
+                    type: string
+                  key2:
+                    type: string
+              example:
+                key1: value_x
+                key2: value_y
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Partner data is not available for updates in order state
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Update Partner Data for existing order
+      operationId: updateOrdersPartnerData
+      description: 'When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order,
+
+        removing any pre-existing key/values.'
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/shipping_address/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  company_name:
+                    type: string
+                  address_1:
+                    type: string
+                  address_2:
+                    type: string
+                  city:
+                    type: string
+                  country_area:
+                    type: string
+                  postal_code:
+                    type: string
+                  country:
+                    type: string
+                  phone:
+                    type: string
+                  email:
+                    type: string
+              example:
+                name: John Smith
+                company_name: unmade
+                address_1: 152 Strand
+                address_2: Somerset House
+                city: London
+                country_area: London
+                postal_code: WC2R 1LA
+                country: UK
+                phone: 0123456789
+                email: js@example.com
+        '400':
+          description: Bad Request
+          headers: {}
+          content: {}
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '404':
+          description: Not Found
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Retrieve shipping address for existing order
+      operationId: getOrdersShippingAddress
+      description: 'When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the
+
+        shipping address  for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an
+
+        appropriate error message.'
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/items:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: List Order Items
+      operationId: getOrdersItems
+      description: "This endpoint can be used to retrieve a paginated list of the individual items in a given order. We preserve the order\nin which the items were sent in the original order creation payload. The `id` of each item is generated automatically\nby Unmade when the order is created. You may choose to store this ID in your systems in order to reference each item\ndirectly in future.\n\nEach order item has three associated Design IDs which have different relationships depending on how the relevant \ndesigns were created, as well as the type of order. In the simplest case these Design IDs may be identical, but will \nusually be different, depending on a variety of factors.\n\n- `input_design_id`: The Design ID which you originally sent in the Order creation payload to create this item\n\n- `manufacturing_design_id`: The ID of the design which is being used as the source of all manufacturing data for this \n    item. This will be different to the `input_design_id` if you specified a different size to that of the order \n    item design: in this case Unmade will generate a new design in the specified size\n\n- `source_design_id`: The ID of the Design which was originally saved by the user in the editor. If the Roster API has \n    been used to create the member design for this item, this ID will be the ID of the original roster **template** \n    design.\n\nThese Design IDs can be used in the Design API to view personalisation data or fetch previews relevant to this order \nitem. In most cases you'll want to use the `design_id` value for this purpose."
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Page number
+        schema:
+          type: number
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/items/{item_id}/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content: {}
+      summary: Retrieve Order Item
+      operationId: getOrdersItems2
+      description: 'This endpoint can be used to retrieve data for a specific item in a given order. See the list representation for a more
+
+        detailed description of this data.'
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: item_id
+        in: path
+        description: ID of the item
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/items/{item_id}/partner_data/:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  my_partner_data_key:
+                    type: string
+                  another-key:
+                    type: string
+              example:
+                my_partner_data_key: foo
+                another-key: bar
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Partner data is not available for updates in order state
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Retrieve an existing order item Partner Data
+      operationId: getOrdersItemsPartnerData
+      description: After an order has been created, this endpoint can be used to retrieve the contents of partner data for an order item.
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: item_id
+        in: path
+        description: ID of the item
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+    patch:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  previous_key:
+                    type: string
+                  key1:
+                    type: string
+                  key2:
+                    type: string
+              example:
+                previous_key: value_a
+                key1: value_x
+                key2: value_y
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Partner data is not available for updates in order state
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Add key/values for existing order item
+      operationId: patchOrdersItemsPartnerData
+      description: When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order item.
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: item_id
+        in: path
+        description: ID of the item
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+      requestBody:
+        content:
+          application/json:
+            example:
+              key1: value_x
+              key2: value_y
+    put:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key1:
+                    type: string
+                  key2:
+                    type: string
+              example:
+                key1: value_x
+                key2: value_y
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Partner data is not available for updates in order state
+        '401':
+          description: Unauthorized
+          headers: {}
+          content: {}
+        '403':
+          description: Forbidden
+          headers: {}
+          content: {}
+        '405':
+          description: Method Not Allowed
+          headers: {}
+          content: {}
+        '406':
+          description: Not Acceptable
+          headers: {}
+          content: {}
+        '415':
+          description: Unsupported Media Type
+          headers: {}
+          content: {}
+      summary: Update Partner Data for existing order item
+      operationId: updateOrdersItemsPartnerData
+      description: 'When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order item,
+
+        removing any pre-existing key/values.'
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: item_id
+        in: path
+        description: ID of the item
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/release_hold/:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  state:
+                    type: string
+              example:
+                id: f00f9780-e026-42f5-9876-41abb3619334
+                state: hold
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Order's hold cannot be released
+      summary: Release Order
+      operationId: ordersReleaseHold
+      description: This endpoint can be used to release an order to production if their state is `hold`.
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+  /v2/orders/{order_id}/set_cancelled/:
+    post:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  state:
+                    type: string
+              example:
+                id: f00f9780-e026-42f5-9876-41abb3619334
+                state: cancelled
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                code: bad_request
+                message: Order cannot be set as cancelled
+      summary: Cancel Order
+      operationId: ordersSetCancelled
+      description: 'This endpoint can be used to cancel an order after creation. Depending on production and billing arrangements between
+
+        you, your vendor and Unmade, cancellation may not be possible if the order has progressed past a certain state. Contact
+
+        Unmade for details of when cancellation is possible for your specific case.'
+      tags:
+      - Ecommerce Orders API
+      parameters:
+      - name: order_id
+        in: path
+        description: ID of the Order in the form of a uuid
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: e.g. Token ABCDEF
+        required: false
+        schema:
+          type: string
+        example: Token ABCDEF
+components:
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash.'
