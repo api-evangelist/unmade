@@ -1,0 +1,134 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/unmade-embed-v2-openapi.json
+note: No official Unmade MCP server was found (docs, npm, MCP registries checked).
+  This is a candidate tool list derived one-to-one from the V2 Integration API
+  operations in the provider's published API Blueprint.
+server:
+  name: unmade
+  transport: http
+tools:
+- name: get_product_editor
+  description: Retrieve the Unmade Editor iframe endpoint for a customisable product
+  source_operation: openapi/unmade-embed-v2-openapi.json#getProducts
+- name: get_design
+  description: Retrieve a saved design, including rendered preview image URLs
+  source_operation: openapi/unmade-embed-v2-openapi.json#getDesigns
+- name: get_design_3d_view
+  description: Retrieve the 3D view for a design
+  source_operation: openapi/unmade-embed-v2-openapi.json#getDesigns3d
+- name: clear_design_placements
+  description: Clear placements on a design
+  source_operation: openapi/unmade-embed-v2-openapi.json#designsClearPlacements
+- name: clear_user_uploaded_placements
+  description: Clear user-uploaded placements on a design
+  source_operation: openapi/unmade-embed-v2-openapi.json#designsClearUserUploadedPlacements
+- name: clone_design
+  description: Clone an existing design
+  source_operation: openapi/unmade-embed-v2-openapi.json#designsClone
+- name: transfer_collection_designs
+  description: Transfer designs across a collection
+  source_operation: openapi/unmade-embed-v2-openapi.json#createCollectionsTransferDesigns
+- name: create_transfer_previews
+  description: Create rendered preview images of a design transferred onto other products
+  source_operation: openapi/unmade-embed-v2-openapi.json#transferPreviews
+- name: create_roster_member_designs
+  description: Create member designs from variable roster data using a base design
+  source_operation: openapi/unmade-embed-v2-openapi.json#createDesignsBaseDesignIdRoster
+- name: create_outfit
+  description: Create an outfit combining multiple designs
+  source_operation: openapi/unmade-embed-v2-openapi.json#createOutfits
+- name: get_outfit
+  description: Retrieve an outfit
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOutfits
+- name: get_outfit_preview
+  description: Retrieve an outfit preview image
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOutfitsPreviewsPreview
+- name: get_outfit_thumbnail
+  description: Retrieve an outfit preview thumbnail
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOutfitsPreviewsThumbnail
+- name: get_outfit_3d_view
+  description: Retrieve the 3D avatar-scene view for an outfit
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOutfits3d
+- name: create_order
+  description: Create an ecommerce order from a saved design ID
+  source_operation: openapi/unmade-embed-v2-openapi.json#createOrders
+- name: list_orders
+  description: List ecommerce orders with state and created-date filters (paginated)
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOrders
+- name: get_order
+  description: Retrieve an ecommerce order, its state and tracking data
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOrders2
+- name: get_order_partner_data
+  description: Retrieve partner data key/values on an order
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOrdersPartnerData
+- name: patch_order_partner_data
+  description: Add key/values to partner data on an existing order
+  source_operation: openapi/unmade-embed-v2-openapi.json#patchOrdersPartnerData
+- name: update_order_partner_data
+  description: Replace partner data on an existing order
+  source_operation: openapi/unmade-embed-v2-openapi.json#updateOrdersPartnerData
+- name: get_order_shipping_address
+  description: Retrieve the shipping address for an order
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOrdersShippingAddress
+- name: list_order_items
+  description: List items on an order (paginated)
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOrdersItems
+- name: get_order_item
+  description: Retrieve a single order item
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOrdersItems2
+- name: get_order_item_partner_data
+  description: Retrieve partner data on an order item
+  source_operation: openapi/unmade-embed-v2-openapi.json#getOrdersItemsPartnerData
+- name: patch_order_item_partner_data
+  description: Add key/values to partner data on an order item
+  source_operation: openapi/unmade-embed-v2-openapi.json#patchOrdersItemsPartnerData
+- name: update_order_item_partner_data
+  description: Replace partner data on an order item
+  source_operation: openapi/unmade-embed-v2-openapi.json#updateOrdersItemsPartnerData
+- name: release_order_hold
+  description: Release an order hold so production can begin
+  source_operation: openapi/unmade-embed-v2-openapi.json#ordersReleaseHold
+- name: cancel_order
+  description: Set an order as cancelled
+  source_operation: openapi/unmade-embed-v2-openapi.json#ordersSetCancelled
+- name: factory_list_orders
+  description: 'Factory API: list production orders with state/date/origin filters'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryGetOrders
+- name: factory_get_order
+  description: 'Factory API: retrieve a production order'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryGetOrders2
+- name: factory_get_order_shipping_address
+  description: 'Factory API: retrieve the shipping address for a production order'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryGetOrdersShippingAddress
+- name: factory_set_order_in_production
+  description: 'Factory API: mark an order as in production'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersSetInProduction
+- name: factory_set_order_ready_to_ship
+  description: 'Factory API: mark an order as ready to ship'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersSetReadyToShip
+- name: factory_set_order_shipped
+  description: 'Factory API: mark an order as shipped'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersSetShipped
+- name: factory_set_order_tracking_number
+  description: 'Factory API: set the tracking number on an order'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersSetTrackingNumber
+- name: factory_set_order_ex_factory_date
+  description: 'Factory API: set the ex-factory date on an order'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersSetExFactoryDate
+- name: factory_list_jobs
+  description: 'Factory API: list production jobs for an order (paginated, includes materials data)'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryGetOrdersJobs
+- name: factory_get_job
+  description: 'Factory API: retrieve a production job'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryGetOrdersJobs2
+- name: factory_set_job_in_production
+  description: 'Factory API: mark a job as in production'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersJobsSetInProduction
+- name: factory_set_job_ready_to_ship
+  description: 'Factory API: mark a job as ready to ship'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersJobsSetReadyToShip
+- name: factory_set_job_ex_factory_date
+  description: 'Factory API: set the ex-factory date on a job'
+  source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersJobsSetExFactoryDate

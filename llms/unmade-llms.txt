@@ -1,0 +1,48 @@
+# Unmade Integration Reference
+
+> Unmade OS is a platform for configurable/customisable product e-commerce. This documentation describes the partner integration API used to embed the Unmade Editor, manage designs, and process orders.
+
+## API Versions
+
+- [V1 API Reference](https://engineering.unmade.com/api-docs/) — HTML rendered docs
+- [V2 API Reference](https://engineering.unmade.com/api-docs/v2.html) — HTML rendered docs
+- [V1 API Blueprint spec](https://engineering.unmade.com/api-docs/apiary.apib) — raw API Blueprint source
+- [V2 API Blueprint spec](https://engineering.unmade.com/api-docs/apiary_v2.apib) — raw API Blueprint source (superset of V1, all endpoints at `/v2/`)
+
+## Authentication
+
+All API endpoints use Token Authentication. Include your token in the `Authorization` header:
+
+```
+Authorization: Token ABC123123
+```
+
+Tokens are provided by Unmade. All API URLs are partner-specific subdomains:
+`https://{your-partner-subdomain}.embed.unmade.com/`
+
+## V1 API Groups
+
+Should only be used for historical context or debugging existing implementations. If adding new functionality to existing projects using V1, consider migrating all usage to equivalent V2 calls. New projects should use V2.
+
+- **Integrating with Unmade** — Overview of the 4-step integration (product setup, editor embed, design ID capture, order creation)
+- **API Setup** — Authentication, subdomains, and general configuration
+- **Unmade Editor** — Embedding the iframe-based design editor into product detail pages
+- **JS Post Messaging Interactions** — Browser postMessage events between the editor iframe and the host page
+- **Transfer Preview API** — Retrieve rendered preview images of a customer's design
+- **Roster API** — Create designs programmatically from variable data using a base design
+- **Orders API** — Create orders, retrieve order status and production state, get tracking numbers
+- **Factory API** — Download manufacturing data for factories
+
+## V2 API Changes
+
+Should be used for any new implementations. 
+
+V2 adds or enhances the following over V1 (all endpoints prefixed `/v2/`):
+
+- 3D design view endpoint (`/v2/designs/{id}/3d/`)
+- Partner data fields on orders
+- Shipping address retrieval
+- Order items pagination
+- Enhanced job states
+- Materials data on jobs
+- Ecommerce Orders API (replaces Orders API)

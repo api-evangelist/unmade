@@ -1,20 +1,159 @@
 aid: unmade
 name: Unmade
-description: Unmade is a company surfaced as a portfolio company of techstars and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: Unmade is a London fashion-tech company whose UnmadeOS platform lets
+  apparel and sportswear brands such as New Balance and Rapha sell customised,
+  on-demand products at scale. Its partner Integration API embeds the Unmade Editor
+  in e-commerce product pages, captures saved designs, renders previews and 3D
+  views, creates ecommerce orders from design IDs, and drives factory production
+  workflows through to shipping. Founded in 2013 and Techstars-backed, Unmade was
+  acquired by garment manufacturer Hi-Tech Apparel in July 2024.
 url: https://raw.githubusercontent.com/api-evangelist/unmade/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://github.com/unmadeworks.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - techstars
 x-tier: stub
 x-tier-reason: portfolio-lead
+x-status: acquired
+x-acquired-by: hi-tech-apparel
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
-- Company
-apis: []
+- Fashion
+- Apparel
+- Manufacturing
+- Customization
+- eCommerce
+- On-Demand Production
+- Embedded Commerce
+apis:
+- aid: unmade:unmade-design-api-api
+  name: Unmade Design API API
+  description: The Design API API from Unmade — 9 operation(s) for design api.
+  humanURL: https://engineering.unmade.com/api-docs/v2.html
+  baseURL: https://partner-subdomain.embed.unmade.com
+  tags:
+  - Design API
+  properties:
+  - type: OpenAPI
+    url: openapi/unmade-design-api-api-openapi.yml
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v2.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/v2.html
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v1.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/
+- aid: unmade:unmade-ecommerce-orders-api-api
+  name: Unmade Ecommerce Orders API API
+  description: The Ecommerce Orders API API from Unmade — 12 operation(s) for ecommerce orders api.
+  humanURL: https://engineering.unmade.com/api-docs/v2.html
+  baseURL: https://partner-subdomain.embed.unmade.com
+  tags:
+  - Ecommerce Orders API
+  properties:
+  - type: OpenAPI
+    url: openapi/unmade-ecommerce-orders-api-api-openapi.yml
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v2.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/v2.html
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v1.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/
+- aid: unmade:unmade-factory-api-api
+  name: Unmade Factory API API
+  description: The Factory API API from Unmade — 15 operation(s) for factory api.
+  humanURL: https://engineering.unmade.com/api-docs/v2.html
+  baseURL: https://partner-subdomain.embed.unmade.com
+  tags:
+  - Factory API
+  properties:
+  - type: OpenAPI
+    url: openapi/unmade-factory-api-api-openapi.yml
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v2.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/v2.html
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v1.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/
+- aid: unmade:unmade-outfit-api-api
+  name: Unmade Outfit API API
+  description: The Outfit API API from Unmade — 5 operation(s) for outfit api.
+  humanURL: https://engineering.unmade.com/api-docs/v2.html
+  baseURL: https://partner-subdomain.embed.unmade.com
+  tags:
+  - Outfit API
+  properties:
+  - type: OpenAPI
+    url: openapi/unmade-outfit-api-api-openapi.yml
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v2.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/v2.html
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v1.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/
+- aid: unmade:unmade-transfer-preview-api-api
+  name: Unmade Transfer Preview API API
+  description: The Transfer Preview API API from Unmade — 2 operation(s) for transfer preview api.
+  humanURL: https://engineering.unmade.com/api-docs/v2.html
+  baseURL: https://partner-subdomain.embed.unmade.com
+  tags:
+  - Transfer Preview API
+  properties:
+  - type: OpenAPI
+    url: openapi/unmade-transfer-preview-api-api-openapi.yml
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v2.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/v2.html
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v1.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/
+- aid: unmade:unmade-unmade-editor-api
+  name: Unmade Unmade Editor API
+  description: The Unmade Editor API from Unmade — 2 operation(s) for unmade editor.
+  humanURL: https://engineering.unmade.com/api-docs/v2.html
+  baseURL: https://partner-subdomain.embed.unmade.com
+  tags:
+  - Unmade Editor
+  properties:
+  - type: OpenAPI
+    url: openapi/unmade-unmade-editor-api-openapi.yml
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v2.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/v2.html
+  - type: APIBlueprint
+    url: openapi/unmade-embed-api-v1.apib
+  - type: Documentation
+    url: https://engineering.unmade.com/api-docs/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -23,3 +162,43 @@ maintainers:
 common:
 - type: Website
   url: https://unmade.com/
+- type: Documentation
+  url: https://engineering.unmade.com/api-docs/
+- type: APIReference
+  url: https://engineering.unmade.com/api-docs/
+- type: GettingStarted
+  url: https://engineering.unmade.com/api-docs/#/group-integrating-with-unmade
+- type: Blog
+  url: https://engineering.unmade.com/
+- type: GitHubOrganization
+  url: https://github.com/unmadeworks
+- type: PrivacyPolicy
+  url: https://www.unmade.com/privacy-policy
+- type: Authentication
+  url: authentication/unmade-authentication.yml
+- type: DomainSecurity
+  url: security/unmade-domain-security.yml
+- type: LLMsTxt
+  url: llms/unmade-llms.txt
+- type: WellKnown
+  url: well-known/unmade-well-known.yml
+- type: MCPServer
+  url: mcp/unmade-mcp.yml
+- type: Conformance
+  url: conformance/unmade-conformance.yml
+- type: ErrorCatalog
+  url: errors/unmade-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/unmade-lifecycle.yml
+- type: Conventions
+  url: conventions/unmade-conventions.yml
+- type: Components
+  url: components/unmade-components.yml
+- type: DataModel
+  url: data-model/unmade-data-model.yml
+- type: Overlay
+  url: overlays/unmade-embed-v2-overlay.yaml
+- type: RateLimits
+  url: rate-limits/unmade-rate-limits.yml
+- type: AgentSkill
+  url: skills/_index.yml

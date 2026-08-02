@@ -1,0 +1,86 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unmade-embed-v2-openapi.json (paths + response payload shapes)
+entities:
+- name: Product
+  id_field: slug
+  description: A customisable product on the partner e-commerce site, linked to an
+    Unmade Editor via its slug.
+- name: Design
+  id_field: design_id
+  description: A saved customisation created in the Unmade Editor (or via the
+    Roster API); referenced through checkout and order creation. Exposes rendered
+    previews and a 3D view.
+- name: Collection
+  id_field: slug
+  description: A grouping of products/designs supporting bulk design transfer.
+- name: TransferPreview
+  description: On-demand rendered preview images of a design applied to other
+    products (full-resolution and ~400px thumbnail URLs).
+- name: Outfit
+  id_field: outfit_id
+  description: A combination of designs with previews and a 3D avatar-scene view.
+- name: Order
+  id_field: id (UUID)
+  description: An ecommerce order created from a Design ID after purchase; carries
+    reference, state, partner_data, factory, tracking_data, is_test_order, and
+    links to items, shipping address, and its manufacturing (Factory API) order.
+- name: OrderItem
+  id_field: item_id
+  description: A line item on an order, with its own partner_data.
+- name: ShippingAddress
+  description: The shipping address attached to an order.
+- name: Job
+  id_field: job_id
+  description: A production job the Factory API derives from order line items;
+    carries job states, materials data, and ex-factory dates.
+- name: Factory
+  id_field: slug
+  description: The manufacturing vendor fulfilling production jobs.
+relationships:
+- from: Product
+  to: Design
+  type: has_many
+  via: design_id (created in the embedded editor for a product slug)
+- from: Design
+  to: TransferPreview
+  type: has_many
+  via: design_id on POST /v2/transfer_previews/
+- from: Design
+  to: Design
+  type: has_many
+  via: base_design_id (roster member designs cloned from a base design)
+- from: Collection
+  to: Design
+  type: has_many
+  via: transfer_designs
+- from: Outfit
+  to: Design
+  type: has_many
+  via: designs composed into the outfit
+- from: Order
+  to: Design
+  type: belongs_to
+  via: design_id supplied at order creation
+- from: Order
+  to: OrderItem
+  type: has_many
+  via: order_items URL (/v2/orders/{order_id}/items)
+- from: Order
+  to: ShippingAddress
+  type: has_one
+  via: shipping_address URL
+- from: Order
+  to: Factory
+  type: belongs_to
+  via: factory {name, slug} on the order payload
+- from: Order
+  to: Job
+  type: has_many
+  via: manufacturing_order URL on factory.unmade.com (/v2/orders/{order_id}/jobs)
+- from: Job
+  to: Factory
+  type: belongs_to
+  via: factory fulfilling the job
+notes: Ecommerce Orders API and Factory API share order IDs — each ecommerce order
+  maps to exactly one Factory API order.

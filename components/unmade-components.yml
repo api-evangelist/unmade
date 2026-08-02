@@ -1,0 +1,30 @@
+generated: '2026-07-21'
+method: searched
+source: https://engineering.unmade.com/api-docs/ (Unmade Editor + JS post messaging groups)
+families:
+- family: Unmade Editor
+  kind: embedded-iframe
+  description: The customisation editor embeds into the product detail page of an
+    e-commerce site as an iframe at
+    https://{partner-subdomain}.embed.unmade.com/v2/products/{slug}/ with optional
+    price, ccy, locale, design_id, and init (JWT) query parameters. Users customise
+    the product in the iframe and the resulting Design ID is carried through the
+    host site's native checkout.
+  docs: https://engineering.unmade.com/api-docs/#/group-unmade-editor
+- family: JS post messaging interactions
+  kind: browser-postmessage-events
+  description: The editor iframe communicates with the host page via
+    window.postMessage. Documented events include design saved (payload matches the
+    Design API response, with a meta key and triggeredBy attribute), add-to-cart,
+    iframe resize, and optional user-interaction events (with a clicked attribute).
+  docs: https://engineering.unmade.com/api-docs/#/group-js-post-messaging-interactions
+- family: Authenticated asset upload (JWT init token)
+  kind: integration-pattern
+  description: For user-uploaded asset support, the host site signs a JWT (HS512,
+    shared key provided by Unmade) whose payload carries a non-PII unique user
+    identifier, passed to the editor iframe as the init query parameter. Invalid
+    tokens disable upload functionality.
+  docs: https://engineering.unmade.com/api-docs/#/group-api-setup#header-advanced-setup
+loader_libraries: []
+notes: No published npm loader library was confirmed as first-party; embedding is
+  plain iframe + postMessage per the docs.

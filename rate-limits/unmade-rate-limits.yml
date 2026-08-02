@@ -1,0 +1,11 @@
+generated: '2026-07-21'
+method: searched
+source: https://engineering.unmade.com/api-docs/ (API Blueprint response examples)
+signaled: true
+status_code: 429
+error_code: throttle_request
+headers: []
+rate_limits: []
+notes: The Integration API signals throttling with HTTP 429 and error code
+  `throttle_request` ("Request was throttled."). No numeric request limits,
+  windows, or rate-limit response headers are published.

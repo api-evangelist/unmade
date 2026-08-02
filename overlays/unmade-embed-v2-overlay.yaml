@@ -1,0 +1,31 @@
+# generated: 2026-07-21 | method: generated
+# API Evangelist enhancements applied on top of the mechanical apib2swagger
+# conversion of the provider's API Blueprint (apiary_v2.apib). The verbatim
+# blueprint is openapi/unmade-embed-api-v2.apib; the enhanced conversion is
+# openapi/unmade-embed-v2-openapi.json.
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Unmade Integration API V2
+  version: 1.0.0
+extends: openapi/unmade-embed-v2-openapi.json
+actions:
+- target: $.info
+  description: Provenance for the converted spec
+  update:
+    x-apievangelist:
+      generated: '2026-07-21'
+      method: derived
+      source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary_v2.apib
+- target: $.components.securitySchemes
+  description: Documented token authentication (Authorization Token header) added
+    as an apiKey security scheme, applied globally.
+  update:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+- target: $.paths.*.*
+  description: Unique camelCase operationIds, product-group tags (Unmade Editor,
+    Design API, Transfer Preview API, Outfit API, Ecommerce Orders API, Factory
+    API), and readable summaries added mechanically to every operation.
+  update: {}

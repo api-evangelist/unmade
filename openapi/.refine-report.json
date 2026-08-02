@@ -1,0 +1,24 @@
+{
+  "provider": "unmade",
+  "sources": [
+    "unmade-design-api-api-openapi.yml",
+    "unmade-ecommerce-orders-api-api-openapi.yml",
+    "unmade-factory-api-api-openapi.yml",
+    "unmade-outfit-api-api-openapi.yml",
+    "unmade-transfer-preview-api-api-openapi.yml",
+    "unmade-unmade-editor-api-openapi.yml"
+  ],
+  "outputs": [
+    "unmade-design-api-api-openapi.yml",
+    "unmade-ecommerce-orders-api-api-openapi.yml",
+    "unmade-factory-api-api-openapi.yml",
+    "unmade-outfit-api-api-openapi.yml",
+    "unmade-transfer-preview-api-api-openapi.yml",
+    "unmade-unmade-editor-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

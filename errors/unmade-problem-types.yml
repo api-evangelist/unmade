@@ -1,0 +1,49 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unmade-embed-v2-openapi.json (4xx responses across all operations)
+docs: https://engineering.unmade.com/api-docs/#/group-api-setup
+format: custom-envelope
+envelope:
+  fields: [code, message, detail]
+  notes: Not RFC 9457 / application/problem+json. Every error response carries a
+    stable machine-readable `code` and a human readable `message`; `detail` is
+    included where possible to aid debugging. The docs advise never string-matching
+    `message` — branch on HTTP status and `code`.
+problems:
+- status: 400
+  code: bad_request
+  title: Bad request
+  remediation: The request body or parameters are invalid; `detail` identifies the
+    offending fields.
+- status: 401
+  code: authentication_failed
+  title: Authentication failed
+  remediation: 'Send `Authorization: Token <token>` and ensure the endpoint URL ends
+    with a trailing slash (missing slashes surface as unexpected 401s).'
+- status: 403
+  code: permission_denied
+  title: Permission denied
+  remediation: The token is valid but not permitted for this resource; confirm the
+    partner subdomain and token pairing with Unmade.
+- status: 404
+  code: not_found
+  title: Not found
+  remediation: Check the resource identifier (design_id, order_id, item_id, job_id,
+    slug).
+- status: 405
+  code: method_not_allowed
+  title: Method not allowed
+  remediation: Use the HTTP method documented for the endpoint.
+- status: 406
+  code: not_acceptable
+  title: Not acceptable
+  remediation: Adjust the Accept header; responses are application/json.
+- status: 415
+  code: unsupported_media_type
+  title: Unsupported media type
+  remediation: Send request bodies as application/json.
+- status: 429
+  code: throttle_request
+  title: Request was throttled
+  remediation: Back off and retry later; no numeric limits or Retry-After headers
+    are documented.

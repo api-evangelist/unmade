@@ -1,0 +1,3701 @@
+FORMAT: 1A
+HOST: https://partner-subdomain.embed.unmade.com/
+
+# Unmade Integration Reference V2
+
+Welcome to the Unmade OS Integration Reference.
+
+See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.
+
+This is **Version 2** of this documentation, which describes the usage of the `v2` API Endpoints. For **Version 1**, [click here](https://engineering.unmade.com/api-docs/#/).
+
+# Group Integrating with Unmade
+
+Unmade integration into your e-commerce site relies on 4 key steps:
+1. **Product setup**
+Customisable products within your e-commerce site need to store a reference that can link them to the corresponding Unmade Editor.
+
+2. **Editor integration**
+The Unmade Editor is embedded to the product detail page of customisable products using an `<iframe>`.
+
+3. **Save DesignID**
+When users have finished customising, your e-commerce site needs to store a unique Design ID throughout your native checkout process.
+
+4. **Order creation**
+Once the purchase has happened through your existing systems, the Design ID needs to be used to trigger the order creation within Unmade.
+
+Further to these core steps, we provide additional APIs that allow you to build more advanced customer journeys and integration:
+- **Order API** In addition to order generation, you can retrieve order data using this API to get production state and tracking number.
+- **Design API** You can get rendered images of a customer's design using this API and the Design ID the Editor has provided.
+- **Factory API** Your factories can use our Web interface to download manufacturing data, or this API.
+- **Roster API** You can create a new design using variable data using a roster base design.
+
+## Typical user journey through e-commerce site
+<a href="https://raw.githubusercontent.com/unmadeworks/api-docs/master/images/Apiary_CustomerJourney.png"><img src="https://raw.githubusercontent.com/unmadeworks/api-docs/master/images/Apiary_CustomerJourney.png" alt="Image showing the typical user journey through the e-commerce site" width="100%"></a>
+
+# Group API setup
+
+## Partner-specific sub-domains
+Each integration with Unmade will run on partner-specific resources. This means the URLs shown throughout this documentation are just examples and you should get your specific URL from your Unmade customer contacts.
+
+``` https://{your-partner-subdomain}.embed.unmade.com/ ```
+
+**Reminder** : The URL of each endpoint must end with `/` otherwise unexpected 401 errors might happen.
+
+
+## Authorization
+The Unmade APIs use Token Authentication. Your unique token will be provided to you by Unmade and needs to be used in the header of your API requests like so:
+
+`Authorization: Token ABC123123`
+
+## Error responses
+Error responses from our API endpoints adhere to RESTful standards. The numeric HTTP status code reported by the web
+server can be used to determine the reason for the error (e.g. 404, meaning resource not found).
+
+These error responses always include a `code` and a human readable `message`. This could be used for your logging purposes, if they need to be read by humans.
+We do not recommend writing any logic that depends on the exact text of the message e.g. using a regex or string matching.
+These messages are more likely to be subject to change, whereas response status and code are less likely to change.
+
+Where possible, we also include a `detail` field. This field contains specific details of the error that was encountered.
+This data is designed to aid with debugging and facilitate integration with Unmade APIs.
+
+## Advanced setup
+
+If you have opted for user-uploaded asset support in your Unmade Editor then there is one additional step for integration.
+
+In order for a user to upload an asset in the Unmade Editor your e-commerce site has to provide us with a unique identifier for that user so that we can store the logos that a user has uploaded and show them to the user when they return to the Unmade Editor.
+
+We will cover two workflows; an Unmade Editor is initialised with an authenticated user of your e-commerce site, and an Unmade Editor requests a user to be authenticated.
+
+## Secure provision of an authenticated user identifier
+
+We make use of [JWT](https://jwt.io) with the HS512 algorithm, to ensure secure communication between your e-commerce site and the Unmade Editor.
+
+Unmade will generate a shared key and provide this key to you. This shared key must be stored securely on both sides. Your e-commerce site will need to use this shared key when generating a token to be passed to the Unmade Editor iframe on initialisation.
+
+The payload that your e-commerce site will need to generate will contain an unique identifier for that authenticated user. This unique identifier must not be an email address or any other personally identifiable information. We suggest you create a new field that is a UUID (Universally Unique Identifier).
+
+The payload with the unique identifier will be encrypted by your e-commerce site using the shared key and a JWT library to generate a JWT token and will allow Unmade to decrypt it, using the shared key.
+
+
+## Initialising an Unmade Editor with unique identifier for an authenticated user
+
+1. For your authenticated user, your e-commerce site MUST generate a payload that contains a "user" property which has the unique identifier for the authenticated user as it's value:
+
+    ```
+    {
+      "user": "3fad6a89-8cec-4350",
+    }
+    ```
+
+    Using the appropriate JWT library, your e-commerce site should encrypt this payload with the shared key. This should generate a token, that looks a bit like;
+
+    ```
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoxNTE2MjM5MDIyfQ.66pC0Ncp6ZiUGljv5dlF8uKO1jQQ04Fvkj7z56VfBjg
+    ```
+
+2. Append this token to your Unmade Editor URL, for example:
+
+    ```
+    https://{your-partner-subdomain}.embed.unmade.com/v2/products/{your-product}/?init=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoxNTE2MjM5MDIyfQ.66pC0Ncp6ZiUGljv5dlF8uKO1jQQ04Fvkj7z56VfBjg
+    ```
+
+3. The Unmade will decode this token and
+
+    If the token IS valid the Unmade Editor UI will enable the ability to upload the relevant asset.
+
+    If the token is NOT valid the error will be logged and the Unmade Editor UI will disable the functionality of uploading content.
+
+    We have the following types of validation/error messages:
+    - wrong key
+    - unable to decipher
+    - missing info in the payload
+    - missing "user" property on the payload
+
+
+## Initialising an Unmade Editor without a unique identifier for an authenticated user
+
+If you initialise the Unmade Editor without an authenticated user then the user will still be able to customise the product and can be prompted to authenticate with your e-commerce site if and when they try to upload an asset.
+
+1. For an unauthenticated user, the Unmade Editor should be initialised without a JWT payload.
+
+    ```
+    https://{your-partner-subdomain}.embed.unmade.com/v2/products/{your-product}/
+    ```
+
+2. If and when the unauthenticated user clicks to upload an asset, the Unmade Editor iFrame will first save the design.
+We then inform your e-commerce site that the user needs to be authenticated in order to continue via a JavaScript postMessage
+to the parent window. See [the postMessages section](#/group-js-post-messaging-interactions)
+of this document for more details on the structure of this message.
+
+
+3. Upon receipt of this postMessage, your site should authenticate the user using your site's login mechanism.
+Then re-initialise the Unmade Editor with a unique identifier for the authenticated user and the saved Design ID:
+
+    ```
+    https://{your-partner-subdomain}.embed.unmade.com/v2/products/{your-product}/?init=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoxNTE2MjM5MDIyfQ.66pC0Ncp6ZiUGljv5dlF8uKO1jQQ04Fvkj7z56VfBjg&design_id=7fad56a8def33980cc3f90
+    ```
+
+4. The Unmade Editor will then enable the authenticated user to upload assets and continue editing their design.
+
+
+## Restrictions for user uploaded assets
+
+The Unmade platform will perform some checks on the files that are uploaded. All uploaded files must:
+
+- Be an SVG
+- Have a maximum filesize of 1MB (Configurable by request)
+- Consist **only** of the following element types:
+  - `svg`
+  - `g`
+  - `defs`
+  - `symbol`
+  - `use`
+  - `circle`
+  - `ellipse`
+  - `line`
+  - `path`
+  - `polygon`
+  - `polyline`
+  - `rect`
+  - `metadata`
+  - `desc`
+  - `title`
+  - `linearGradient`
+  - `radialGradient`
+  - `stop`
+  - `solidcolor`
+  - `color-profile`
+  - `marker`
+  - `mask`
+  - `clipPath`
+- Not contain elements with any of the following attributes:
+  - `opacity`
+- Not contain elements with references to external images
+- Have a maximum of 6 unique colours *
+
+If the uploaded file violates any of these restrictions, an error message will be displayed in the UI and the file will not be saved.
+
+Each user is prevented from uploading more than 400 individual assets by default. This limit is also configurable on request.
+
+\* *A "colour" is defined as any value of any of these attributes: `stroke`, `fill`, `stop-color`*
+
+
+# Group Unmade Editor
+The Unmade Editor is the web interface that lets users customise a product and visualises the customisation choices in real-time using Unmade's photo-realistic visualisation technology.
+Each customisable product we have jointly developed has its own specific Iframe URL - even if the underlying customisation editor (the options available and the user interface) are the same.
+
+The Editor is embedded into your website as an `<iframe>` element and you can send specific attributes to affect localisation, the price displayed or load a previously created design as a starting point.
+There are multiple different ways in which you can choose to integrate the Unmade Editor into the customer experience you are building - this means that the integration of the actual `<iframe>` can be different on a case-by-case basis and we are happy to assist and advise on this.
+
+An example of how you may want to embed the iframe is below:
+```
+<iframe
+  src="<URL>"           // Iframe endpoint URL
+  frameborder="0"       // Set to no border
+  width="100%"          // Width set to 100%
+  height="100%"         // Height set to 100%
+  scrolling="no">       // Scrolling turned off
+</iframe>
+```
+
+## Unmade Editor integration [/v2/products/{slug}/{?price,ccy,locale,design_id,init}]
+
++ Parameters
+    + slug - The product slug (will be agreed with you)
+    + price (optional, number) - The price to display for the product
+    + price__<product_slug> (optional, number) - If using the UnmadeOS Collections feature, prices can be specified for many individual products in this way
+    + ccy (optional) - The ISO 4217 currency code corresponding to the `price`
+    + locale (optional) - The IETF language tag to set localisation of the user interface
+        + Default: `en-GB`
+    + design_id (optional) - An Unmade Design ID that is compatible with this editor to be used as starting point
+    + init (optional) - An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](#/group-api-setup#header-advanced-setup) for more information.
+    + mode (optional) - Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design.
+
+## Iframe endpoint [GET]
+
+The response to this request is a well-formed HTML document used as content for the `<iframe>`.
+
+Use this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an
+external e-commerce website.  Note that there are optional query parameters.
+
+Depending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on the page. We are happy to advise and support on this.
+
+
++ Response 200 (text/html)
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
++ Response 405 (application/json)
+
+    + Body
+
+            {
+                "code": "method_not_allowed",
+                "message": "Method used is not allowed"
+            }
+
++ Response 406 (application/json)
+
+    + Body
+
+            {
+                "code": "not_acceptable",
+                "message": "Could not satisfy the request Accept header."
+            }
+
++ Response 415 (application/json)
+
+    + Body
+
+            {
+                "code": "unsupported_media_type",
+                "message": "Unsupported media type in request."
+            }
+
++ Response 429 (application/json)
+
+    + Body
+
+            {
+                "code": "throttle_request",
+                "message": "tRequest was throttled."
+            }
+
+
+# Group JS post messaging interactions
+
+## JS post messaging in general
+
+Certain actions performed by the customer in the iframe will result in events being sent to the host website using the
+[postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) API. A JavaScript listener, such as the following, should be implemented on the host site:
+
+```
+window.addEventListener("message", receiveMessage, false);
+
+function receiveMessage (event) {
+  var origin = event.origin || event.originalEvent.origin;
+  if (origin === "https://{your-partner-subdomain}.embed.unmade.com/") {
+    switch (event.data.type) {
+        case 'UNMADE_design_saved':
+            addToCart(event.data.payload);
+        case 'UNMADE_interaction':
+            resizeIFrame(event.data.payload);
+        default:
+            break;
+    }
+  }
+}
+```
+
+## Saved design
+```type: "UNMADE_design_saved"``` **required**
+
+Once a customer has finished creating their design in the Unmade Editor and click "save" or "add to bag" within the Iframe, Unmade will save the user's design, generate a `DesignID` and pass this ID to you by Post Messaging to the parent window.
+
+This action will also take place if the user triggers an action that would take them away from the Unmade Editor, for example attempting to upload content whilst not logged in.  In this case, the host website should respond to the postMessage by storing the `DesignID` and prompting the user to log in, at which point the `DesignID` can be associated with the user's account.
+
+In addition to the `DesignID`, this postMessage also includes the URL to a preview image you can immediately access (for example, to show the custom design during the checkout process) and other details about the user's design.
+
+This postMessage also includes a `meta` key, containing additional information about the event that triggered the save and whether the user was logged in or not.
+
+Please note that the payload of this message is identical in structure as the response of the [Design API](#/group-design-api) described further below.
+
+Example postMessage:
+```
+{
+  type: "UNMADE_design_saved",
+  meta: {
+    triggeredBy: "upload"    // see table below for possible values and their meanings
+    userLoggedIn: false      // or true
+  },
+  payload: {
+    id: "0c9e9b2b-ee60-439a-9172-819df97d7987",     // Design ID
+  }
+}
+```
+### The triggeredBy attribute in design saved postMessages
+
+The triggeredBy attribute contains information about why the design was saved, as this is not always the user completing a design.
+
+    + `save`
+        + **Triggered:** When the user clicks 'add to bag' inside the Editor iframe, Unmade will save the user's design and pass the generated design ID to the parent window in a postMessage.
+        + **Next step:** Add to bag. Add the product to the user's cart.
+    + `upload`
+        + **Triggered:** When a user token is not provided and the user clicks upload, we save the design and postMessage the design ID so you can log them in.
+        + **Next step:** Show the user a login modal, redirect them to this design ID on successful login.
+    + `share`
+        + **Triggered:** When the user clicks 'share' inside the Editor iframe, the process is the same as when the user clicks the 'add to bag' button.
+        + **Next step:** Generate a URL that directs users to the design ID and show the user a share dialog.
+
+### User interaction
+```type: "UNMADE_interaction"``` *optional*
+
+We can optionally configure to send the Parent Window a message to trigger interactions event outside the Unmade Iframe.
+For example, if within the Unmade Iframe there is a link to a Size Guide that should trigger a modal handled by the parent window.
+
+Example postMessage:
+```
+{
+    payload: {
+        clicked: 'sizing',
+        type: "UNMADE_interaction"
+    }
+}
+```
+
+### The clicked attribute in interaction postMessages
+
+    + `variable_text_help`
+        + **Triggered:** When the user clicks the help button in the roster embellishment section of the editor
+        + **Next step:** Open a modal or link with help information
+    + `logo_upload_help`
+        + **Triggered:** When the user clicks the help link when uploading a logo
+        + **Next step:** Open a modal or link with help information
+    + `legalCopy`
+        + **Triggered:** When the user clicks the terms and conditions link
+        + **Next step:** Open a modal or link with terms and conditions information
+    + `sizing`
+        + **Triggered:** When the user clicks the size guide link
+        + **Next step:** Open a modal or link with size guide information
+    + `save_design`
+        + **Triggered:** When the user clicks the save design button
+        + **Next step:** Open a loading overlay
+
+
+Please note that to direct the user to help content about logo uploading, we also support an HTML hyperlink instead of the postMessage functionality.
+
+## Group Design API
+### Retrieve designs [/v2/designs/{design_id}/]
+
+Once a user has created a design using and Unmade Editor and you have saved the Design ID, you can use the Design API to request images and information on that saved design.
+This lets you:
+- download multiple high resolution renders of the design to show in your customer journey, use in retargeting or a "my account" section of your website
+- identify the URL of the Unmade Editor used to create this design, so that you can construct a URL to load the Editor with this Design ID as a starting point
+- get structured data about some of the customisation choices made, this currently covers selected size, gender, components, placements and colours and patterns used on design elements (printed areas)
+- fetch the applied logo for a placement that the user has uploaded, per placement the `user_logo_upload` key will contain information about the asset including `asset_url` where the asset can be retrieved
+- identify if on any of the placements has been applied a non vector logo within the `user_logo_upload` key there will be a `is_vector` key that if the value is `false` will indicate the asset is not SVG
+- identify the source design id for grouping purposes, the source design id will be the design created originally on the editor and not via any other APIs
+- identify the roster placeholders that have been applied to placements with enough information to create the roster members.
+- identify the colours used through the design and where are they used.
+
+
+### Retrieve a design [GET]
+
++ Parameters
+    + design_id (uuid) - ID of the Design in the form of a uuid
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4",
+                "source_design_id": "5e39f63b-a084-4d80-ae29-1fdb87a79922",
+                "product": "<Unmade Editor URL>",
+                "size": "<Size selected>",
+                "gender": "<Gender selected>",
+                "primary_code": "<Product code selected>",
+                "secondary_code": "<Design secondary code selected>",
+                "previews": [
+                    {
+                        "name": "front",
+                        "image": "https://PREVIEW_URL"
+                    },
+                    {
+                        "name": "front",
+                        "image": "https://PREVIEW_URL"
+                    }
+                ],
+                "variant": {
+                    "name": "Striped 1",
+                    "display_name": "Striped 1",
+                    "is_locked": false,
+                    "group": {
+                        "name": "stripes",
+                        "display_name": "Stripes",
+                    }
+                },
+                "components": [
+                    {
+                        "component": {
+                            "name": "Buttons_ABC123",
+                            "display_name": "Buttons",
+                        },
+                        "option": {
+                            "name": "Button_ABC123_001",
+                            "display_name": "Red Buttons",
+                            "reference": "ABCDEFGH"
+                        },
+                        "is_locked": true
+                    }
+                ],
+                "materials": [
+                    {
+                        "panel": {
+                            "name": "front",
+                            "display_name": "Body",
+                        },
+                        "material_type": {
+                            "name": "poly",
+                            "display_name": "Polyester",
+                        },
+                        "material": {
+                            "name": "grey-polyester",
+                            "display_name": "Neutral Grey",
+                        }
+                    },
+                    {
+                        "panel": {
+                            "name": "back",
+                            "display_name": "Back",
+                        },
+                        "material_type": {
+                            "name": "poly",
+                            "display_name": "Polyester",
+                        },
+                        "material": {
+                            "name": "grey-polyester",
+                            "display_name": "Neutral Grey",
+                        }
+                    }
+                ],
+                "design_elements":[
+                    {
+                        "name": "Background_1",
+                        "display_name": "Area 1",
+                        "pattern_used": "Dots 1",
+                        "is_locked": false
+                    },
+                    {
+                        "design_element_name": "Background_2",
+                        "design_element_displayname": "Area 2",
+                        "pattern_used": null,
+                        "is_locked": true
+                    }
+                ],
+                "placements": [
+                    {
+                        "name": "front-chest-logo",
+                        "display_name": "Front Chest",
+                        "dimensions": "not-available",
+                        "option": {
+                            "name": "white-logo",
+                            "display_name": "White Fancy Logo"
+                        },
+                        "is_locked": true,
+                        "manufacturing_method": "sublimation",
+                        "origin_roster_field_key": null,
+                        "rotation": 0,
+                        "content_size_preset": null,
+                        "artwork_dimensions": null,
+                        "artwork_id": "AAA111"
+                    },
+                    {
+                        "name": "back-center-logo",
+                        "display_name": "Center Back",
+                        "dimensions": {
+                            "width": "60.00",
+                            "height": "60.00",
+                            "units": "mm"
+                        },
+                        "option": {
+                            "name": "user-uploaded",
+                            "display_name": "User Uploaded",
+                        },
+                        is_locked: false,
+                        "manufacturing_method": "heat-transfer",
+                        "origin_roster_field_key": null,
+                        "rotation": 0,
+                        "user_logo_upload": {
+                            "asset_url": "https://URL_TO_UPLOADED_LOGO",
+                            "is_vector": true,
+                            "version": 1,
+                            "dpi": null
+                        },
+                        "content_size_preset": {
+                            "name": "big",
+                            "size": "60",
+                            "units": "mm"
+                        },
+                        "artwork_dimensions": null,
+                        "artwork_id": "BBB222"
+                    },
+                    {
+                        "name": "back-lower-logo",
+                        "display_name": "Lower Back",
+                        "dimensions": {
+                            "width": "60.00",
+                            "height": "60.00",
+                            "units": "mm"
+                        },
+                        "option": {
+                            "name": "user-uploaded",
+                            "display_name": "User Uploaded",
+                        },
+                        is_locked: false,
+                        "manufacturing_method": "embroidery",
+                        "origin_roster_field_key": null,
+                        "rotation": 0,
+                        "user_logo_upload": {
+                            "asset_url": "https://URL_TO_UPLOADED_LOGO",
+                            "is_vector": false,
+                            "version": 1,
+                            "dpi": null
+                        }
+                        "content_size_preset": null,
+                        "artwork_dimensions": {
+                            "width": "10",
+                            "height": "10",
+                            "units": "mm"
+                        },
+                        "artwork_id": "CCC333"
+                    },
+                    {
+                        "name": "right-sleeve",
+                        "display_name": "Right Sleeve",
+                        "dimensions": {
+                            "width": "15.00",
+                            "height": "15.00",
+                            "units": "mm"
+                        },
+                        "option": {
+                            "name": "text",
+                            "display_name": "User Text",
+                        },
+                        is_locked: false,
+                        "manufacturing_method": "heat-transfer",
+                        "origin_roster_field_key": "number",
+                        "rotation": 0,
+                        "text": 6,
+                        "font": "Arial",
+                        "content_size_preset": null,
+                        "artwork_dimensions": {
+                            "width": "10",
+                            "height": "10",
+                            "units": "mm",
+                            "cap_height": "5"
+                        },
+                        "artwork_id": "DDD444"
+                    }
+                ],
+                "upcharges": [
+                    {
+                        "charge": {
+                            "value": "10.00",
+                            "currency": "USD"
+                        }
+                        "upcharge_type": "manufacturing-method",
+                        "customisation_element_id": "embroidery",
+                        "customisation_element_display_name": "Embroidery",
+                        "applied_to": "back-lower-logo",
+                    }
+                ],
+                "roster": null,
+                "colours_used": [
+                    {
+                        "name": "Black"
+                        "in": [
+                            {
+                                "name": "front-chest-logo",
+                                "type": "placement"
+                            },
+                            {
+                                "name": "Background_1",
+                                "type": "design-element"
+                            }
+                        ],
+                    },
+                    {
+                        "name": "Red"
+                        "in": [
+                            {
+                                "name": "right-sleeve",
+                                "type": "placement"
+                            }
+                        ],
+                    }
+                ],
+            }
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "code": "bad_request",
+                "message": "Request payload is not valid."
+            }
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
++ Response 405 (application/json)
+
+    + Body
+
+            {
+                "code": "method_not_allowed",
+                "message": "Method used is not allowed"
+            }
+
++ Response 406 (application/json)
+
+    + Body
+
+            {
+                "code": "not_acceptable",
+                "message": "Could not satisfy the request Accept header."
+            }
+
++ Response 415 (application/json)
+
+    + Body
+
+            {
+                "code": "unsupported_media_type",
+                "message": "Unsupported media type in request."
+            }
+
+### Design 3D View [/v2/designs/{design_id}/3d/{?scene,autosize,interactive,autorotate}]
+
+If the given product has been set up using Unmade 3D visualisation functionality, 
+this endpoint allows you to view your design on a 3D model just like in the Unmade Editor.
+
+Will return a 404 if the product has not been set up for 3D visualisation.
+
+The endpoint accepts a number of query parameters which can be used to control the behaviour
+of the model viewer when it loads.
+
+
+### 3D View [GET]
+
++ Parameters
+    + design_id (uuid) - ID of the Design in the form of a uuid
+    + scene (string, optional) - The name of the camera position to load. If not provided, load the default camera position of the model.
+    + autosize (boolean, optional) - If true, the canvas will be resized to fit the browser viewport and will resize if changed. If not provided, the canvas will remain at a fixed default size.
+    + interactive (boolean, optional) - If true, the model will have some limited mouse interactivity. Defaults to false.
+    + autorotate (number, optional) - If provided, the model will automatically rotate at a rate of 360 degrees in N seconds.
+
++ Response 200 (text/html)
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
++ Response 405 (application/json)
+
+    + Body
+
+            {
+                "code": "method_not_allowed",
+                "message": "Method used is not allowed"
+            }
+
++ Response 406 (application/json)
+
+    + Body
+
+            {
+                "code": "not_acceptable",
+                "message": "Could not satisfy the request Accept header."
+            }
+
++ Response 415 (application/json)
+
+    + Body
+
+            {
+                "code": "unsupported_media_type",
+                "message": "Unsupported media type in request."
+            }
+
+### Clear Placements [/v2/designs/{design_id}/clear_placements/]
+
+Creates a new design based on the given design with all non-optional placements removed. Useful when you want to
+offer the user a way to reset their design choices and start fresh, for example to remove customisation before
+adding the product to a basket in a default state.
+
+Returns a new design ID — the original design is not modified.
+
+Returns 400 if the design has no non-optional placements to clear.
+
+### Clear Placements [POST]
+
++ Parameters
+    + design_id (uuid) - ID of the Design in the form of a uuid
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            }
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "error": "Design has no non-optional placements"
+            }
+
+### Clear User Uploaded Placements [/v2/designs/{design_id}/clear_user_uploaded_placements/]
+
+Creates a new design based on the given design with all user-uploaded content removed from placements. Useful when
+you want to offer the user a way to reset their logo uploads and start fresh without losing their other customisation choices.
+
+Returns a new design ID — the original design is not modified.
+
+Returns 400 if the design has no user-uploaded content to clear.
+
+### Clear User Uploaded Placements [POST]
+
++ Parameters
+    + design_id (uuid) - ID of the Design in the form of a uuid
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            }
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "error": "Design has no user-uploaded content"
+            }
+
+### Clone Design [/v2/designs/{design_id}/clone/]
+
+Creates a new design by cloning an existing design into a different size. Useful when a customer wants to
+change the size of their design without starting over — all other customisation choices are preserved.
+
+The `size` must be a valid size for the product the design belongs to. Returns a new design ID — the
+original design is not modified.
+
+### Clone Design [POST]
+
++ Parameters
+    + design_id (uuid) - ID of the Design in the form of a uuid
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+            {
+                "size": "M"
+            }
+
+    + Attributes
+        + size (string, required) - A valid size for the product this design belongs to (e.g. `S`, `M`, `L`).
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+            }
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "size": ["Size M does not exist on product my-product. Available sizes: S, L, XL"]
+            }
+
+### Transfer Designs [/v2/collections/{slug}/transfer_designs/]
+
+A collection groups multiple products together so customers can transfer a design across all of them in a single
+action — useful when selling a product range where customers want a consistent customisation across all items.
+
+Given a source design belonging to one of the collection's products, creates equivalent designs for every other
+product in the collection. Each new design is generated by the Editor Service in parallel — if any product fails,
+the entire request fails and no designs are saved.
+
+Returns an empty `designs` list if the collection has no other products.
+
+### Transfer Designs [POST]
+
++ Parameters
+    + slug (string) - Slug of the Collection
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+            {
+                "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "designs": [
+                    {
+                        "product_slug": "product-b",
+                        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    },
+                    {
+                        "product_slug": "product-c",
+                        "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+                    }
+                ]
+            }
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "design_id": ["Design 8a2b6517-e020-46fd-8cd0-ec441d4ac4b4 does not exist."]
+            }
+
+# Group Transfer Preview API
+
+The Transfer Previews allows you to generate preview images which show how a given Design would appear when applied to 
+a different Product. These images could be used for cross-selling or marketing purposes by your site. For more info on 
+this functionality, see the [live demo](https://engineering.unmade.com/design-transfer-demo/).
+
+## Create Transfer Previews [/v2/transfer_previews/]
+
+Passing a valid Product Slug and Design ID to this endpoint creates one Transfer Preview for each scene available for 
+the target product's default size.
+
+You can then use the provided `image` or `thumbnail` URLs to load the images in your site. These previews function in 
+the same way to normal `/v2/previews/` URLs and are generated on demand when first requested. The URLs are suitable for 
+direct use in an `<img>` element, or could be saved to your backend for future use.
+
+If the target product has 3D visualisation enabled, you will also recieve a `3d` URL for each scene. This URL functions
+in the same way as the normal [Design 3D View](#/group-design-api/resource-v2-designs-design_id-3d-scene,autosize,interactive,autorotate-bdc929d)
+Endpoint described above. If no 3D visualisation is available for the target product, the `3d` value will be `null`.
+
+## Create Transfer Previews [POST]
+
+
++ Request Create Transfer Preview (application/json)
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+            {
+                "product": "<product-slug>",
+                "design": "<design-id>"
+            }
+
+    + Attributes
+        + product (string, required) - Slug of the target product to render the design against.
+        + design (string, required) - ID of the Design to use as the source.
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "previews": [
+                    {
+                        "name": "front",
+                        "image": "v2/transfer_previews/1/preview/",
+                        "thumbnail": "v2/transfer_previews/1/thumbnail/",
+                        "3d": "v2/transfer_previews/1/3d/"
+                    },
+                    {
+                        "name": "back",
+                        "image": "v2/transfer_previews/2/preview/",
+                        "thumbnail": "v2/transfer_previews/2/thumbnail/",
+                        "3d": "v2/transfer_previews/2/3d/",
+                    }
+                ]
+            }
+
++ Response 401 (application/json)
+
+    + Body
+
+            {
+                "code": "authentication_failed",
+                "message": "Incorrect authentication credentials."
+            }
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
++ Response 405 (application/json)
+
+    + Body
+
+            {
+                "code": "method_not_allowed",
+                "message": "Method used is not allowed"
+            }
+
+
+# Group Roster API
+
+## Retrieve Roster design data
+
+If a given product has roster functionality enabled, an editor user will be provided with the option to select a roster 
+field for any enabled region. A design saved with one or more of these roster fields is known as a "roster design".
+
+A roster design can be identified by the presence of the `roster` key in its API representation. See [here](#/group-design-api)
+for full details of this representation.
+
+An example `roster` object is shown below:
+
+```json
+{
+  "roster_fields": ["player-name"],
+  "data": {
+    "player-name": {
+      "id": "player-name",
+      "display_name": "Player Name",
+      "placeholder_text": "Your Name Here",
+      "allowed_characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz0123456789",
+      "placements": [
+        "Center Chest",
+        "Upper Back"
+      ]
+    }
+  }
+}
+```
+
+This indicates that a single roster field: `player-name` was selected for this roster design.
+
+The `display_name` of the field is a human-readable representation of the field for use when creating player designs.
+
+The `placeholder_text` field is the temporary value that the roster region is populated with when saved. In this 
+example, the editor user would see the string "Your Name Here" in the region for which they'd selected this field.
+
+The `allowed_characters` is the full set of characters which can be used to populate this field when creating player 
+designs.
+
+`placements` are the human-readable names of the physical placements on the garment to which this field will be applied. 
+In the above example, the value provided for the `player-name` field would be placed in both the "Center Chest" and 
+"Upper Back" placements. This data may be useful for the generation of forms for collecting these values from your 
+members.
+
+## Create Member Designs [/v2/designs/base_design_id/roster/]
+
+Once the "template" roster design has been created, the `/roster/` endpoint can be used to populate the roster fields 
+with the real data for your members.
+
+To create member designs, the `/roster/` endpoint accepts POST requests with payloads containing the roster design ID, 
+as well as the values of each field to be populated. Upon receipt of a valid payload, a new design is created, and its 
+ID is returned. This ID can then be used to place orders as required.
+
+Successfully created member design IDs can also be queried via the [Retrieve Design](#/group-design-api/resource-v2-designs-design_id-75c5c1cd)
+endpoint as normal. The `placements` data for member designs will include the `origin_roster_field_key` for any 
+placements which originated from roster fields.
+
+Many member designs can be created from a single roster design.
+
+To create a member design, the `/roster/` endpoint must receive valid values for **all** roster fields specified for a
+given roster design. You can send empty values (e.g. `""` or `null`), for example to generate a design without a name or
+number.
+
+The provided values for each roster field will be validated to ensure they contain only allowed characters and that, 
+once rendered in the chosen font, they are not too wide for their respective placement. If there are validation errors 
+we return a 400 response detailing the codes for the validation errors for each field. Possible validation error
+codes are `illegal_character`, `text_too_wide`, `text_sanitised`, `text_truncated`, `text_too_long`.
+
+Additionally, for each error type a `details` object is provided. This contains the filtered / truncated text that 
+*would* be permitted in the placement.
+
+## Create a member design [POST]
+#### Roster field rules
+
+To create a member design, a single `roster_member` object containing the required values for all roster fields in the 
+template roster design is provided:
+
+
++ Request Create player design (application/json)
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+            {
+                "roster_member": {
+                    "<roster_field_a>": "foo",
+                    "<roster_field_b": "99"
+                }
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {"id": "c9b86945-45a6-4a43-beaf-361a7f0d8a77"}
+
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "code": "bad_request",
+                "message": "Request payload is not valid.",
+                "detail": {
+                    "last-name": [
+                        {
+                            "error": "text_too_wide",
+                            "details": {"amended_text": "shorter text"}
+                        },
+                        {
+                            "error": "text_sanitised",
+                            "details": {"amended_text": "sanitised text"}
+                        }
+                    ],
+                    "number": [
+                        {
+                            "error": "illegal_characters",
+                            "details": {"amended_text": "text with no illegal chars"}
+                        }
+                    ]
+                }
+            }
+
++ Response 401 (application/json)
+
+    + Body
+
+            {
+                "code": "authentication_failed",
+                "message": "Incorrect authentication credentials."
+            }
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
++ Response 405 (application/json)
+
+    + Body
+
+            {
+                "code": "method_not_allowed",
+                "message": "Method used is not allowed"
+            }
+
++ Response 406 (application/json)
+
+    + Body
+
+            {
+                "code": "not_acceptable",
+                "message": "Could not satisfy the request Accept header."
+            }
+
++ Response 415 (application/json)
+
+    + Body
+
+            {
+                "code": "unsupported_media_type",
+                "message": "Unsupported media type in request."
+            }
+
+# Group Outfit API
+
+The Outfit API allows you to combine multiple individual Designs into a single multi-piece outfit — for example, a top 
+and a bottom that are customised and worn together. Each outfit is built from one or more **pieces**, where each piece 
+maps a **slot** (e.g. `top`, `bottom`) to a specific Design.
+
+Outfits are created against an **Outfit Spec**, which defines the set of slots that must be filled. You will receive 
+your outfit spec slug(s) and slot names from your Unmade customer contact when a new product range is being set up.
+
+Outfit visualisation is available if appropriate compatible 3D models and avatars have been configured for the given
+outfit spec. The availability of visualisation also depends on the sizes of the designs used in each slot of the outfit.
+Unmade will provide reccomendations on how best to integrate outfit creation and visualisation capabilities for your
+specific use case.
+
+## Create Outfit [/v2/outfits/]
+
+### Create an Outfit [POST]
+
+Creates a new outfit from a set of designs, one per slot defined by the given outfit spec.
+
+All slots defined in the outfit spec must be provided. Providing an unknown slot or supplying two pieces for the same 
+slot will return a 400 error.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+            {
+                "outfit_spec": "my-outfit-spec",
+                "name": "My Outfit",
+                "editor_user": "3fad6a89-8cec-4350",
+                "pieces": [
+                    {
+                        "slot_slug": "top",
+                        "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+                    },
+                    {
+                        "slot_slug": "bottom",
+                        "design_id": "5e39f63b-a084-4d80-ae29-1fdb87a79922"
+                    }
+                ]
+            }
+
+    + Attributes
+        + outfit_spec (string, required) - Slug of the Outfit Spec to use. Defines which slots must be filled.
+        + name (string, optional) - A human-readable label for this outfit.
+        + editor_user (string, optional) - The `external_id` of an existing EditorUser to associate with this outfit. Used to link the outfit to a specific end-user.
+        + pieces (array, required) - One object per slot in the outfit spec.
+            + slot_slug (string) - The slug of the slot this piece fills.
+            + design_id (string) - The ID of the Design to use for this slot. The design's product must belong to the given slot.
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                "name": "My Outfit",
+                "outfit_spec": "my-outfit-spec",
+                "editor_user": "3fad6a89-8cec-4350",
+                "created": "2024-01-15T10:30:00Z",
+                "pieces": [
+                    {
+                        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                        "slot_slug": "top",
+                        "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+                    },
+                    {
+                        "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                        "slot_slug": "bottom",
+                        "design_id": "5e39f63b-a084-4d80-ae29-1fdb87a79922"
+                    }
+                ],
+                "previews": [
+                    {
+                        "name": "front",
+                        "image": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/",
+                        "thumbnail": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/"
+                    }
+                ],
+                "scenes": [
+                    {
+                        "name": "default",
+                        "url": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/"
+                    }
+                ]
+            }
+
++ Response 400 (application/json)
+
+    + Body
+
+            {
+                "code": "bad_request",
+                "message": "Invalid input.",
+                "detail": {
+                    "pieces": "Missing pieces for slots: bottom."
+                }
+            }
+
++ Response 401 (application/json)
+
+    + Body
+
+            {
+                "code": "authentication_failed",
+                "message": "Incorrect authentication credentials."
+            }
+
++ Response 403 (application/json)
+
+    + Body
+
+            {
+                "code": "permission_denied",
+                "message": "You do not have permission to perform this action."
+            }
+
+
+## Retrieve Outfit [/v2/outfits/{outfit_id}/]
+
+### Retrieve an Outfit [GET]
+
+Returns the full representation of an outfit, including its pieces, previews, and any available 3D scenes.
+
++ Parameters
+    + outfit_id (uuid) - ID of the Outfit in the form of a uuid
+
++ Request
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                "name": "My Outfit",
+                "outfit_spec": "my-outfit-spec",
+                "editor_user": "3fad6a89-8cec-4350",
+                "created": "2024-01-15T10:30:00Z",
+                "pieces": [
+                    {
+                        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                        "slot_slug": "top",
+                        "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+                    },
+                    {
+                        "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                        "slot_slug": "bottom",
+                        "design_id": "5e39f63b-a084-4d80-ae29-1fdb87a79922"
+                    }
+                ],
+                "previews": [
+                    {
+                        "name": "front",
+                        "image": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/",
+                        "thumbnail": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/"
+                    }
+                ],
+                "scenes": [
+                    {
+                        "name": "default",
+                        "url": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/"
+                    }
+                ]
+            }
+
++ Response 401 (application/json)
+
+    + Body
+
+            {
+                "code": "authentication_failed",
+                "message": "Incorrect authentication credentials."
+            }
+
++ Response 403 (application/json)
+
+    + Body
+
+            {
+                "code": "permission_denied",
+                "message": "You do not have permission to perform this action."
+            }
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
+
+## Outfit Preview [/v2/outfits/{outfit_id}/previews/{preview_id}/preview/]
+
+Preview and thumbnail URLs are returned as part of the outfit representation and do not require authentication.
+Both endpoints redirect (308) to the underlying image URL.
+
+If the image has not yet been generated at the time of the request, it will be generated on demand, which may cause
+a brief delay.
+
+### Outfit Preview [GET]
+
+Returns the full-size rendered image of the outfit for this preview.
+
++ Parameters
+    + outfit_id (uuid) - ID of the Outfit
+    + preview_id (uuid) - ID of the OutfitPreview (obtained from the `previews` array on the outfit)
+
++ Response 308
+
+    Permanent redirect to the image URL.
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
+
+## Outfit Thumbnail [/v2/outfits/{outfit_id}/previews/{preview_id}/thumbnail/]
+
+### Outfit Thumbnail [GET]
+
+Returns a smaller thumbnail version of the outfit preview image.
+
++ Parameters
+    + outfit_id (uuid) - ID of the Outfit
+    + preview_id (uuid) - ID of the OutfitPreview (obtained from the `previews` array on the outfit)
+
++ Response 308
+
+    Permanent redirect to the thumbnail URL.
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
+    
+## Outfit 3D View [/v2/outfits/{outfit_id}/3d/{avatar_scene_slug}/]
+
+If available for a given saved outfit, this endpoint returns an embeddable HTML page showing all
+pieces of the outfit rendered on a 3D avatar. It functions the same way as the [Design 3D View](#/group-design-api/resource-v2-designs-design_id-3d-scene,autosize,interactive,autorotate-bdc929d)
+endpoint and accepts the same optional query parameters.
+
+Available scene slugs are returned in the `scenes` array on the outfit object.
+
+This endpoint does not require authentication, and supports embedding as an iframe.
+
+### 3D View [GET]
+
++ Parameters
+    + outfit_id (uuid) - ID of the Outfit
+    + avatar_scene_slug (string) - Slug of the avatar scene (obtained from the `scenes` array on the outfit)
+    + autosize (boolean, optional) - If true, the canvas resizes to fit the browser viewport.
+    + interactive (boolean, optional) - If true, the model has limited mouse interactivity. Defaults to false.
+    + autorotate (number, optional) - If provided, the model automatically rotates at 360 degrees in N seconds.
+
++ Response 200 (text/html)
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+                "code": "not_found",
+                "message": "Not found."
+            }
+
+
+# Group Ecommerce Orders API
+
+The Ecommerce Orders API is accessed via your `https://partner-subdomain.embed.unmade.com/` URL. All requests require 
+your authorization token which is passed as an HTTP request header.
+
+## Order States
+
+As an order progresses through its lifecycle it will adopt one of a number of order states. These states are as:
+follows:
+
+    + `new`: This order has been received by Unmade, but is not in production yet
+    + `submitting`: This order is being sent to the factory for production
+    + `submitted`: This order has been sent to the factory for production
+    + `in_production`: The manufacturing of the order has started at the factory
+    + `ready_to_ship`: This order is waiting to be picked up at the factory
+    + `shipped`: The factory has marked this order as shipped
+    + `cancelled`: This order has been cancelled
+    + `hold`: This order is on hold and has not yet been submitted for manufacturing
+    + `failed`: This order has failed. (Error state, please contact Unmade)
+
+## Create Orders [/v2/orders/]
+## Create an Order [POST]
+
+Once an order has been placed on the ecommerce platform, the Unmade system should be notified to begin the process of
+generating manufacturing files. To do this, pass a unique order reference, and one or more order items to this endpoint
+via an HTTP POST request. Each item must reference an Unmade Design ID. The same Design ID can be used for multiple
+order items, if provided with different `size` values inside the `options` object. To order multiple identical garments
+in the same size, use the `quantity` value. Each item must also have a `unit_price` object with both a `value` and
+`currency` specified. Depending on the nature of your integration with Unmade, a `shipping_address` may also be required
+for order creation.
+
+Optionally, arbitrary key-value pairs can be passed as a `partner_data` object at both the order and order item level. 
+This may be used by your system to provide your internal ID or similar reference for this order which may be relevant
+for integration with your vendor. These key-value pairs will also be present on the manufacturing order and jobs 
+associated with this ecommerce order.
+
+If you want to create the order and keep it on hold for subsequent updates to the `partner_data` you might do it by
+sending the boolean value for `set_order_on_hold` as `true`.
+
+You may optionally provide a boolean value for the `is_test_order` field to indicate a given order is not a real
+production order. If this value is set to `true`, the order will be omitted from Unmade billing processes. Speak to your
+Unmade representative for more information about recommended integration testing procedures.
+
++ Request Create Order (application/json)
+    + Headers
+
+          Authorization: Token ABCDEF
+
+    + Body
+
+          {
+            "reference": "YOUR UNIQUE ORDER REFERENCE",
+            "order_items": [
+              {
+                "design": "UNMADE-DESIGN-ID",
+                "reference": "YOUR ORDER-ITEM REFERENCE",
+                "quantity": 2,
+                "unit_price": {
+                  "value": "99.99",
+                  "currency": "USD"
+                },
+                "options": {
+                  "size": "M"
+                },
+                "partner_data": {
+                  "barcode": "98323928238372"
+                }
+              }
+            ],
+            "partner_data": {
+              "example_po_number": "example_number",
+              "example_po_type": "example_value"
+            },
+            "shipping_address": {
+              "name": "John Smith",
+              "company_name": "unmade",
+              "address_1": "152 Strand",
+              "address_2": "Somerset House",
+              "city": "London",
+              "postal_code": "WC2R 1LA",
+              "country": "GB",
+              "country_area": "London",
+              "phone": "0123456789",
+              "email": "john@smith.com"
+            }
+          }
+
+    + Attributes
+        + reference (string, required) - Your unique reference for this order. Max 256 characters.
+        + order_items (array, required) - One or more items to include in the order.
+            + (object)
+                + design (string, required) - The Unmade Design ID for this item.
+                + reference (string, required) - Your unique reference for this order item. Max 256 characters.
+                + quantity (number, required) - Number of units.
+                + unit_price (object, required) - Price per unit.
+                    + value (string, required) - Numeric price value as a string (e.g. `"99.99"`).
+                    + currency (string, required) - ISO 4217 currency code (e.g. `"USD"`).
+                + options (object, required) - Customisation options for this item.
+                    + size (string, required) - Size selected for this item.
+                + partner_data (object, optional) - Arbitrary key-value pairs to associate with this order item (e.g. a barcode).
+        + partner_data (object, optional) - Arbitrary key-value pairs to associate with the order as a whole (e.g. PO number, shipping method).
+        + shipping_address (object, required) - Delivery address for the order.
+            + name (string, required) - Recipient full name. Max 256 characters.
+            + company_name (string, optional) - Company name. Max 256 characters.
+            + address_1 (string, required) - First line of address. Max 256 characters.
+            + address_2 (string, optional) - Second line of address. Max 256 characters.
+            + city (string, required) - City. Max 256 characters.
+            + postal_code (string, required) - Postal or ZIP code. Max 20 characters.
+            + country (string, required) - ISO 3166-1 alpha-2 country code (e.g. `"GB"`).
+            + country_area (string, required) - State, province, or region. Max 128 characters.
+            + phone (string, optional) - Phone number. Max 30 characters.
+            + email (string, optional) - Email address. Max 256 characters.
+
++ Response 201 (application/json)
+
+    + Body
+
+          {
+            "id": "c9b86945-45a6-4a43-beaf-361a7f0d8a77"
+          }
+
++ Response 400 (application/json)
+    
+    + Body
+    
+          {
+             "code": "bad_request",
+             "message": "Request payload is not valid."
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials."
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action."
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed"
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header."
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request."
+          }
+
+
+## Retrieve Order [/v2/orders/{order_id}/]
+## Retrieve an existing order [GET]
+
+After an order has been created, this endpoint can be used to retrieve order data for example to check the order state.
+
+Depending on the nature of your integration with Unmade, the contents of the `tracking_data` object may also update as 
+orders progress through the various production states.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Retrieve Order
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "id": "2c9c3662-d679-4e13-bfdb-7c2580c80b46",
+            "reference": "UMD12345",
+            "created": "2024-07-28T18:05:36.806548Z",
+            "submitted": "2024-07-29T18:05:53.714553Z",
+            "in_production": "2024-08-01T08:05:53.714553Z",
+            "ready_to_ship": null,
+            "shipped": null,
+            "num_items": 12,
+            "order_items": "https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/items/",
+            "shipping_address": "https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/shipping_address/",
+            "manufacturing_order": "https://factory.unmade.com/v2/orders/fd792895-1e32-41b1-90af-683f0cf9f753/",
+            "partner_data": {
+              "my_partner_data_key": "foo"
+            },
+            "factory": {
+              "name": "Factory A",
+              "slug": "factory-a"
+            },
+            "state": "submitted",
+            "tracking_data": {
+                "tracking_number": ""
+            },
+            "is_order_portal": false,
+            "is_test_order": false
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Retrieve Order Partner Data [/v2/orders/{order_id}/partner_data/]
+## Retrieve an existing order Partner Data [GET]
+
+After an order has been created, this endpoint can be used to retrieve the contents of partner data of the order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Retrieve Order
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "my_partner_data_key": "foo",
+            "another-key": "bar"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Add key/values to Partner Data [/v2/orders/{order_id}/partner_data/]
+## Add key/values to Partner Data for existing order[PATCH]
+When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Add key/values to Partner Data
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+          {
+            "key1": "value_x",
+            "key2": "value_y"
+          }
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "previous_key": "value_a",
+            "key1": "value_x",
+            "key2": "value_y"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Partner data is not available for updates in order state"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Update Partner Data [/v2/orders/{order_id}/partner_data/]
+## Update Partner Data for existing order[PUT]
+When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order,
+removing any pre-existing key/values.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Update key/values to Partner Data
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "key1": "value_x",
+            "key2": "value_y"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Partner data is not available for updates in order state"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Retrieve Shipping Address [/v2/orders/{order_id}/shipping_address/]
+## Retrieve shipping address for existing order[GET]
+
+When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the
+shipping address  for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an
+appropriate error message.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Retrieve Shipping Address
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "name": "John Smith",
+              "company_name": "unmade",
+              "address_1": "152 Strand",
+              "address_2": "Somerset House",
+              "city": "London",
+              "country_area": "London",
+              "postal_code": "WC2R 1LA",
+              "country": "UK",
+              "phone": "0123456789",
+              "email": "js@example.com"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Shipping address not available when order is not ready_to_ship.",
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## List Order Items [/v2/orders/{order_id}/items{?page}]
+## List Order Items [GET]
+
+This endpoint can be used to retrieve a paginated list of the individual items in a given order. We preserve the order
+in which the items were sent in the original order creation payload. The `id` of each item is generated automatically
+by Unmade when the order is created. You may choose to store this ID in your systems in order to reference each item
+directly in future.
+
+Each order item has three associated Design IDs which have different relationships depending on how the relevant 
+designs were created, as well as the type of order. In the simplest case these Design IDs may be identical, but will 
+usually be different, depending on a variety of factors.
+
+ - `input_design_id`: The Design ID which you originally sent in the Order creation payload to create this item
+ - `manufacturing_design_id`: The ID of the design which is being used as the source of all manufacturing data for this 
+    item. This will be different to the `input_design_id` if you specified a different size to that of the order 
+    item design: in this case Unmade will generate a new design in the specified size
+ - `source_design_id`: The ID of the Design which was originally saved by the user in the editor. If the Roster API has 
+    been used to create the member design for this item, this ID will be the ID of the original roster **template** 
+    design.
+
+These Design IDs can be used in the Design API to view personalisation data or fetch previews relevant to this order 
+item. In most cases you'll want to use the `design_id` value for this purpose.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + page (optional, number) - Page number
+
++ Request List Order Items
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "count": 12,
+            "next": "https://partner.embed.unmade.com/v2/orders/123456/items?page=2",
+            "previous": null,
+            "results": [
+              {
+                "id": 12345,
+                "manufacturing_design_id": "fd792895-1e32-41b1-90af-683f0cf9f753",
+                "input_design_id": "fd792895-1e32-41b1-90af-683f0cf9f753",
+                "source_design_id": "fd792895-1e32-41b1-90af-683f0cf9f753",
+                "quantity": 1,
+                "partner_data": {},
+                "options": {
+                  "size": "L"
+                },
+                "unit_price": {
+                  "value": 120.00,
+                  "currency": "USD"
+                },
+                "reference": "D60033C14A",
+                "factory": {
+                  "name": "Factory A",
+                  "slug": "factory-a"
+                },
+                "manufacturing_job": "https://factory.unmade.com/v2/orders/123456/jobs/876543/"
+                "arrive_by_date": "2024-08-11",
+                "ex_factory_date": "2024-07-28"
+              },
+              // ... remaining items 
+            ]
+          }
+          
+
+## Retrieve Order Item [/v2/orders/{order_id}/items/{item_id}/]
+## Retrieve Order Item [GET]
+
+This endpoint can be used to retrieve data for a specific item in a given order. See the list representation for a more
+detailed description of this data.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + item_id (string) - ID of the item
+
++ Request Retrieve Order Item
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "id": 12345,
+            "manufacturing_design_id": "fd792895-1e32-41b1-90af-683f0cf9f753",
+            "input_design_id": "fd792895-1e32-41b1-90af-683f0cf9f753",
+            "source_design_id": "fd792895-1e32-41b1-90af-683f0cf9f753",
+            "quantity": 1,
+            "partner_data": {},
+            "options": {
+              "size": "L"
+            },
+            "unit_price": {
+              "value": 120.00,
+              "currency": "USD"
+            },
+            "reference": "D60033C14A",
+            "factory": {
+              "name": "Factory A",
+              "slug": "factory-a"
+            },
+            "manufacturing_job": "https://factory.unmade.com/v2/orders/123456/jobs/876543/"
+            "arrive_by_date": "2024-08-11",
+            "ex_factory_date": "2024-07-28"
+          }
+
+
+## Retrieve Order Item Partner Data [/v2/orders/{order_id}/items/{item_id}/partner_data/]
+## Retrieve an existing order item Partner Data [GET]
+
+After an order has been created, this endpoint can be used to retrieve the contents of partner data for an order item.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + item_id (string) - ID of the item
+
++ Request Retrieve Order
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "my_partner_data_key": "foo",
+            "another-key": "bar"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Partner data is not available for updates in order state"
+          }
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Add key/values to Order Item Partner Data [/v2/orders/{order_id}/items/{item_id}/partner_data/]
+## Add key/values for existing order item[PATCH]
+When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order item.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + item_id (string) - ID of the item
+
++ Request Add key/values to Partner Data
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+          {
+            "key1": "value_x",
+            "key2": "value_y"
+          }
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "previous_key": "value_a",
+            "key1": "value_x",
+            "key2": "value_y"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Partner data is not available for updates in order state"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Update Partner Data [/v2/orders/{order_id}/items/{item_id}/partner_data/]
+## Update Partner Data for existing order item[PUT]
+When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order item,
+removing any pre-existing key/values.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + item_id (string) - ID of the item
+
++ Request Update key/values to Partner Data
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "key1": "value_x",
+            "key2": "value_y"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Partner data is not available for updates in order state"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Release Order [/v2/orders/{order_id}/release_hold/]
+## Release Order [POST]
+
+This endpoint can be used to release an order to production if their state is `hold`.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Cancel Order
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "state": "hold"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Order's hold cannot be released"
+          }
+
+## Cancel Order [/v2/orders/{order_id}/set_cancelled/]
+## Cancel Order [POST]
+
+This endpoint can be used to cancel an order after creation. Depending on production and billing arrangements between
+you, your vendor and Unmade, cancellation may not be possible if the order has progressed past a certain state. Contact
+Unmade for details of when cancellation is possible for your specific case.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Cancel Order
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "state": "cancelled"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Order cannot be set as cancelled"
+          }
+
+## List Orders [/v2/orders/{?state,page,created_before,created_after}]
+## List Orders [GET]
+
+This endpoint can be used to retrieve the complete list of all orders that have been created to date.
+
+This endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to 
+select the desired page.
+
+You can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter 
+the listed orders by their creation date.
+
++ Parameters
+    + state (optional, string) - Show orders with this state (see Order States section above for allowed values)
+    + page (optional, number) - Page number
+    + created_before (optional, string) - Show orders created before this date (`YYYY-MM-DD`)
+    + created_after (optional, string) - Show orders created after this date (`YYYY-MM-DD`)
+
++ Request List Orders
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "count": 99,
+            "next": "https://partner.embed.unmade.com/v2/orders/?page=2",
+            "previous": null,
+            "results": [
+              {
+                "id": "2c9c3662-d679-4e13-bfdb-7c2580c80b46",
+                "reference": "UMD12345",
+                "created": "2024-07-28T18:05:36.806548Z",
+                "submitted": "2024-07-28T18:05:53.714553Z",
+                "num_items": 12,
+                "order_items": "https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/items/",
+                "shipping_address": "https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/shipping_address/",
+                "manufacturing_order": "https://factory.unmade.com/v2/orders/fd792895-1e32-41b1-90af-683f0cf9f753/",
+                "partner_data": {
+                  "my_partner_data_key": "foo"
+                },
+                "factory": {
+                  "name": "Factory A",
+                  "slug": "factory-a"
+                },
+                "state": "submitted",
+                "tracking_data": {},
+                "is_order_portal": false,
+                "is_test_order": false,
+                "ready_to_ship": null,
+                "shipped": null
+              },
+              // ...remaining orders here
+            ]
+          }
+
+# Group Factory API
+
+After an Ecommerce order has been created, Unmade begins a process of converting the various line items in the order 
+into production jobs which can then be manufactured at your vendor factory. The Factory API is used to interact with
+all order data related to this production process.
+
+Each Ecommerce Order maps to exactly one Factory API Order. The same order ID can be used in the order endpoints on both
+APIs.
+
+The Factory API is accessed via `https://factory.unmade.com/`. All requests require your authorization token which is 
+passed as an HTTP request header.
+
+## Order States
+
+During production, orders progress through the following states:
+
+ - `new`: The order has not yet begun production
+ - `in_production`: The order has been accepted and is now in production
+ - `ready_to_ship`: The order has been produced and is awaiting shipping
+ - `shipped`: The order has left the factory
+ - `cancelled`: The order has been cancelled
+
+## List Orders [/factory.unmade.com/v2/orders/{?state,page,created_before,created_after,submitted_before,submitted_after,ecommerce_origin,reference}]
+## List Orders [GET]
+
+This endpoint can be used to retrieve the complete list of all orders that have been created to date.
+
+This endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to 
+select the desired page.
+
+You can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter 
+the listed orders by their creation date.
+
++ Parameters
+    + state (optional, string) - Show orders with this state (see Order States section above for allowed values)
+    + page (optional, number) - Page number
+    + created_before (optional, string) - Show orders created before this date (`YYYY-MM-DD`)
+    + created_after (optional, string) - Show orders created after this date (`YYYY-MM-DD`)
+    + submitted_before (optional, string) - Show orders submitted for manufacturing before this date (`YYYY-MM-DD`)
+    + submitted_after (optional, string) - Show orders submitted for manufacturing after this date (`YYYY-MM-DD`)
+    + ecommerce_origin (optional, string) - Show orders with `ecommerce_origin` containing specified string
+    + reference (optional, string) - Show orders with `reference` containing specified string
+
++ Request List Orders
+
+    + Headers
+
+          Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "count": 12,
+            "next": "https://factory.unmade.com/v2/orders/?page=2",
+            "previous": null,
+            "results": [
+              {
+                "id": "a38c331d-cc6d-4e03-b514-91e27ae8b02e",
+                "created": "2017-07-31T16:52:50.905026Z",
+                "submitted": "2017-07-31T17:44:50.905026Z",
+                "reference": "mc_testorder6",
+                "num_jobs": 4,
+                "jobs": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/jobs/",
+                "shipping_address": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/shipping_address/",
+                "ecommerce_order": "https://partner.embed.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4",
+                "factory": {
+                  "name": "Factory A",
+                  "slug": "factory-a"
+                },
+                "partner_data": {
+                  "my_partner_data_key": "foo"
+                },
+                "attachments": {
+                  "packing_slip": "https://cdn.unmade.com/order/900243544001/attachments/packing_slip.pdf",
+                  "commercial_invoice": "https://cdn.unmade.com/order/900243544001/attachments/import_invoice.pdf"
+                },
+                "summary": "https://cdn.unmade.com/order/900243544001/attachments/summary.pdf",
+                "state": "in_production",
+                "tracking_data": {},
+                "destination_country": "US",
+                "shipped": null,
+                "cancelled": null
+              },
+              // ... remaining orders
+            ]
+          }
+
+## Retrieve Order [/factory.unmade.com/v2/orders/{order_id}/]
+## Retrieve an existing order [GET]
+
+After an order has been submitted to production, you can use this endpoint to pull order data into your own systems or
+query production states.
+
+The `attachments` object contains URLs to any paperwork or documentation associated with this order.
+
+**Note**: Any `attachments` containing sensitive information such as customer shipping addresses will only be present
+in the response if the order is state `in_production` or `ready_to_ship`.   
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Retrieve Order
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "id": "a38c331d-cc6d-4e03-b514-91e27ae8b02e",
+            "created": "2017-07-31T16:52:50.905026Z",
+            "submitted": "2017-07-31T17:44:50.905026Z",
+            "reference": "mc_testorder6",
+            "num_jobs": 4,
+            "jobs": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/jobs/",
+            "shipping_address": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/shipping_address/",
+            "ecommerce_order": "https://partner.embed.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4",
+            "factory": {
+              "name": "Factory A",
+              "slug": "factory-a"
+            },
+            "partner_data": {
+              "my_partner_data_key": "foo"
+            },
+            "attachments": {
+              "packing_slip": "https://cdn.unmade.com/order/900243544001/attachments/packing_slip.pdf",
+              "commercial_invoice": "https://cdn.unmade.com/order/900243544001/attachments/import_invoice.pdf"
+            },
+            "summary": "https://cdn.unmade.com/order/900243544001/attachments/summary.pdf",
+            "state": "in_production",
+            "tracking_data": {},
+            "destination_country": "US",
+            "shipped": null,
+            "cancelled": null
+          }          
+
++ Response 400 (application/json)
+    
+    + Body
+    
+          {
+             "code": "bad_request",
+             "message": "Request payload is not valid.",
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Retrieve Order Shipping Address [/factory.unmade.com/v2/orders/{order_id}/shipping_address/]
+## Retrieve Shipping Address[GET]
+
+When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the 
+shipping address for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an 
+appropriate error message.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Retrieve Shipping Address
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "name": "John Smith",
+              "company_name": "unmade",
+              "address_1": "152 Strand",
+              "address_2": "Somerset House",
+              "city": "London",
+              "country_area": "London",
+              "postal_code": "WC2R 1LA",
+              "country": "UK",
+              "phone": "0123456789",
+              "email": "js@example.com"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Shipping address not available when order is not ready_to_ship.",
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Set Order In Production [/factory.unmade.com/v2/orders/{order_id}/set_in_production/]
+## Set In Production[POST]
+
+Once an order has been ingested into your systems and has entered production with your vendor, this endpoint is used to
+inform Unmade that production has begun. This state change is automatically propagated to the associated Ecommerce order
+to allow the end consumer to be notified if required. This state change also automatically propagates to all associated
+jobs in this order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Set Order In Production
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "state": "in_production"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Order cannot be set as in_production"
+          }
+
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Set Order Ready to Ship [/factory.unmade.com/v2/orders/{order_id}/set_ready_to_ship/]
+## Set Ready to Ship[POST]
+
+Once an order has completed production and is ready to ship from your vendor, this endpoint is used to inform Unmade 
+that the order is ready to ship. This state change is automatically propagated to the associated Ecommerce order to 
+allow the end consumer to be notified if required. This state change also automatically propagates to all associated
+jobs in this order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Set Order Ready to Ship
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "state": "ready_to_ship"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Order cannot be set as ready_to_ship"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Set Order Shipped [/factory.unmade.com/v2/orders/{order_id}/set_shipped/]
+## Set Shipped[POST]
+
+Once an order has finally been shipped from your vendor, this endpoint is used to inform Unmade that the order is on the
+way to the destination address. This state change is automatically propagated to the associated Ecommerce order to 
+allow the end consumer to be notified if required. This state change also automatically propagates to all associated
+jobs in this order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Set Order Shipped
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "state": "shipped"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Order cannot be set as shipped"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Set Order Tracking Number [/factory.unmade.com/v2/orders/{order_id}/set_tracking_number/]
+## Set Tracking Number[POST]
+
+If relevant for the shipping configuration for your integration, this endpoint can be used to provide a tracking number
+that has been generated in a third-party shipping system. If provided, this tracking number propagates up to this 
+order's associated Ecommerce order to allow the Ecommerce system to pass it on to the end-consumer. 
+
+This endpoint can only be used if the given order is `ready_to_ship`. 
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Set Order Tracking Number
+
+    + Body
+
+          {
+              "tracking_number": "123456789"
+          }
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "tracking_data": {
+                  "tracking_number": "123456789"
+              }
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Tracking number cannot be set when order is not ready_to_ship.",
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## Set Ex-factory Date [/factory.unmade.com/v2/orders/{order_id}/set_ex_factory_date/]
+## Set Order Ex-factory Date[POST]
+
+On creation, Unmade assigns all production jobs an Ex-factory date based on a lead time estimate which has been 
+pre-agreed with you and your vendor. This serves as a target date by which the piece is expected to have left the 
+factory location. Jobs within an order can have different Ex-factory dates depending on per-product lead times. In the 
+case of unforeseen delays (or unexpectedly quicker production!) this endpoint can be used to pass an updated Ex-factory 
+date to Unmade. If provided, all jobs in the given order are assigned this updated Ex-factory date. This update also 
+propagates up to this order's associated Ecommerce order to allow the Ecommerce system to notify to the end-consumer. 
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+
++ Request Set Order Ex-factory Date
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+          {
+              "ex_factory_date": "YYYY-MM-DD"
+          }
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "ex_factory_date": "2024-08-19",
+              "arrive_by_date": "2024-08-29"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }
+
+## List Jobs [/factory.unmade.com/v2/orders/{order_id}/jobs{?page}]
+## List Jobs[GET]
+
+This endpoint can be used to retrieve a paginated list of the individual jobs associated with a given manufacturing 
+order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + page (optional, number) - Page number
+
++ Request List Jobs
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "count": 99,
+            "next": "https://partner.embed.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/jobs?page=2",
+            "previous": null,
+            "results": [
+              {
+                "id": "3db51d03-eae6-4bc0-9f04-e7c25121bd48",
+                "reference": "D20033C664",
+                "order_reference": "UM762552",
+                "product_name": "Technical Tee",
+                "product_code": "TT5251",
+                "manufacturing_template_code": "WT11452G",
+                "size": "L",
+                "quantity": 1,
+                "arrive_by_date": "2024-08-19",
+                "ex_factory_date": "2024-08-05",
+                "manufacturing_order": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/",
+                "manufacturing_files_zip": "https://factory.unmade.com/v2/jobs/e3dc59c3-d4ed-42bc-8d73-23dd0e5c4301/manufacturing_files_zip/",
+                "ticket": "https://factory.unmade.com/v22/jobs/e3dc59c3-d4ed-42bc-8d73-23dd0e5c4301/ticket_pdf/",
+                "ecommerce_metadata": {
+                  "name": "Basketball Technical Tee",
+                  "code": "TT5251XX"
+                },
+                "ecommerce_origin": "partner.embed",
+                "source_design_url": "https://partner.embed.unmade.com/v2/designs/4471f21d-659e-4b0f-b24d-7d839e857259/",
+                "order_item_design_url": https://partner.embed.unmade.com/v2/designs/65338424-9438-4abf-ad97-d8445d36c7f6/"
+                "shipping_information": {
+                  "hs_code": "XYZ.1234.QWERTY",
+                  "composition": "100% Cotton",
+                  "description": "Sublimated technical tee short sleeves 2 buttons"
+                  "price": {
+                    "value": 18.00,
+                    "currency": "USD"
+                  }
+                },
+                "factory": {
+                  "name": "Factory A",
+                  "slug": "factory-a"
+                },
+                "components": [
+                  {
+                    "name": "colourway-BKH",
+                    "display_name": "Black Heather",
+                    "type": "NB_colourway",
+                    "reference": "BKH"
+                  }
+                ],
+                "partner_data": {
+                  "internal_ref": "15572690633029"
+                },
+                "previews": [
+                  {
+                    "preview": "https://cdn.unmade.com/E3DC59C3_AB4030F7.png",
+                    "name": "Front"
+                  },
+                  {
+                    "preview": "https://cdn.unmade.com/E3DC59C3_MQOCYBE6.png",
+                    "name": "Left"
+                  },
+                  {
+                    "preview": "https://cdn.unmade.com/E3DC59C3_8NVBFEUD.png",
+                    "name": "Back"
+                  },
+                  {
+                    "preview": "https://cdn.unmade.com/E3DC59C3_NFVDTF54.png",
+                    "name": "Right"
+                  }
+                ],
+                "personalisation": [
+                  {
+                    "placement": {
+                      "name": "chest-center",
+                      "display_name": "Front Chest"
+                    },
+                    "option_name": "Custom Text",
+                    "manufacturing_method": "Embroidery",
+                    "text": "SMITH",
+                    "font": "arial2023",
+                    "asset": "https://example.com/asset.svg",
+                    "origin_roster_field_key": null
+                    "rotation": "0",
+                    "artwork": {
+                      "id": "UX3BI5PP5FP3PNZ7NWKHEYNV",
+                      "dimensions": {
+                        "width": "279.40",
+                        "height": "117.39",
+                        "units": "mm",
+                      }
+                    }
+                  }
+                ],
+                "materials": [
+                  {
+                    "panel": {
+                      "name": "front",
+                      "display_name": "Front Panel"
+                    },
+                    "material_type": {
+                      "name": "ABC Recycled Polyester",
+                      "reference": "ABCPoly"
+                    },
+                    "material": {
+                      "name": "Poly Plain",
+                      "reference": "ABCPoly_001"
+                    }
+                  },
+                  {
+                    "panel": {
+                      "name": "collar",
+                      "display_name": "Collar / Neck"
+                    },
+                    "material_type": {
+                      "name": "ABC Recycled Polyester",
+                      "reference": "ABCPoly"
+                    },
+                    "material": {
+                      "name": "Solid Black Poly",
+                      "reference": "ABCPoly_099"
+                    }
+                  }
+                ] 
+              },
+              // ...remaining jobs here
+            ]
+          } 
+
+## Retrieve Job [/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}]
+## Retrieve Job[GET]
+
+This endpoint can be used to retrieve data for a specific job in a given order. In addition to basic metadata, this 
+endpoint provides:
+  - Structured data describing the various customisation options chosen by the user for this job (eg. selected 
+   **components**, **text** and **colours**)
+  - URLs to one or more `previews` for this job
+  - The URL for a zip file containing all manufacturing files for this job
+  - The URL to this job's ticket PDF
+
+### Job States
+
+Jobs flow through the same states as [orders](#/group-factory-api#header-order-states), but jobs within an order may each have different states.
+
+Jobs also have an additional state: `not_ready` which is used when a given job has been very recently created. This state indicates that manufacturing files are still being generated and are not yet available for download.  You will notice that the `manufacturing_files_zip` field will be `null` for jobs which are still in the `not_ready` state.
+
+When a job progresses from state `not_ready` to `new`, the `manufacturing_files_zip` URL will become available. This means that all manufacturing files are ready, and the URL can then be used to download all manufacturing files for a given job.
+
+The URLs provided by the `manufacturing_files_zip` and `ticket` fields do not require authentication, so can be safely stored and passed to any other systems that may be part of your order management workflow.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + job_id (string) - ID of the job in the form of a uuid
+
++ Request Retrieve Job
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+            "id": "3db51d03-eae6-4bc0-9f04-e7c25121bd48",
+            "reference": "D20033C664",
+            "order_reference": "UM762552",
+            "product_name": "Technical Tee",
+            "product_code": "TT5251",
+            "manufacturing_template_code": "WT11452G",
+            "size": "L",
+            "quantity": 1,
+            "arrive_by_date": "2024-08-19",
+            "ex_factory_date": "2024-08-05",
+            "manufacturing_order": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/",
+            "manufacturing_files_zip": "https://factory.unmade.com/v2/jobs/e3dc59c3-d4ed-42bc-8d73-23dd0e5c4301/manufacturing_files_zip/",
+            "ticket": "https://factory.unmade.com/v22/jobs/e3dc59c3-d4ed-42bc-8d73-23dd0e5c4301/ticket_pdf/",
+            "ecommerce_metadata": {
+              "name": "Basketball Technical Tee",
+              "code": "TT5251XX"
+            },
+            "ecommerce_origin": "partner.embed",
+            "source_design_url": "https://partner.embed.unmade.com/v2/designs/4471f21d-659e-4b0f-b24d-7d839e857259/",
+            "order_item_design_url": https://partner.embed.unmade.com/v2/designs/65338424-9438-4abf-ad97-d8445d36c7f6/"
+            "shipping_information": {
+              "hs_code": "XYZ.1234.QWERTY",
+              "composition": "100% Cotton",
+              "description": "Sublimated technical tee short sleeves 2 buttons"
+              "price": {
+                "value": 18.00,
+                "currency": "USD"
+              }
+            },
+            "factory": {
+              "name": "Factory A",
+              "slug": "factory-a"
+            },
+            "components": [
+              {
+                "name": "colourway-BKH",
+                "display_name": "Black Heather",
+                "type": "NB_colourway",
+                "reference": "BKH"
+              }
+            ],
+            "partner_data": {
+              "internal_ref": "15572690633029"
+            },
+            "previews": [
+              {
+                "preview": "https://cdn.unmade.com/E3DC59C3_AB4030F7.png",
+                "name": "Front"
+              },
+              {
+                "preview": "https://cdn.unmade.com/E3DC59C3_MQOCYBE6.png",
+                "name": "Left"
+              },
+              {
+                "preview": "https://cdn.unmade.com/E3DC59C3_8NVBFEUD.png",
+                "name": "Back"
+              },
+              {
+                "preview": "https://cdn.unmade.com/E3DC59C3_NFVDTF54.png",
+                "name": "Right"
+              }
+            ],
+            "personalisation": [
+              {
+                "placement_name": "chest-center",
+                "placement_display_name": "Front Chest",
+                "option_name": "Custom Text",
+                "manufacturing_method": "Embroidery",
+                "text": "SMITH",
+                "font": "arial2023",
+                "rotation": "0",
+                "artwork_id": "UX3BI5PP5FP3PNZ7NWKHEYNV",
+                "artwork_width": "279.40",
+                "artwork_height": "117.39",
+                "units": "mm",
+                "origin_roster_field_key": null
+              }
+            ],
+            "materials": [
+              {
+                "panel": {
+                  "name": "front",
+                  "display_name": "Front Panel"
+                },
+                "material_type": {
+                  "name": "ABC Recycled Polyester",
+                  "reference": "ABCPoly"
+                },
+                "material": {
+                  "name": "Poly Plain",
+                  "reference": "ABCPoly_001"
+                }
+              },
+              {
+                "panel": {
+                  "name": "collar",
+                  "display_name": "Collar / Neck"
+                },
+                "material_type": {
+                  "name": "ABC Recycled Polyester",
+                  "reference": "ABCPoly"
+                },
+                "material": {
+                  "name": "Solid Black Poly",
+                  "reference": "ABCPoly_099"
+                }
+              }
+            ]
+          }
+
+## Set Job In Production [/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}/set_in_production/]
+## Set In Production[POST]
+
+If a given order consists of a large number of jobs, production for these jobs may begin at different times. In such a 
+case, it is possible to inform Unmade that individual jobs have begun production using this endpoint. This updates the 
+state of this job's order to `in_production`, but does not affect the state of the other jobs in this order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + job_id (string) - ID of the job in the form of a uuid
+
++ Request Retrieve Order Item
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "state": "in_production"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Job cannot be set as in_production"
+          }
+
+
+## Set Job Ready to Ship [/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}/set_ready_to_ship/]
+## Set Ready to Ship[POST]
+
+If a given order consists of a large number of jobs, production for these jobs may be completed at different times. In 
+such a case, it is possible to inform Unmade that individual jobs have completed production and are ready to ship using 
+this endpoint. When all jobs in a given order are `ready_to_ship`, the order itself is marked as `ready_to_ship`. 
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + job_id (string) - ID of the job in the form of a uuid
+
++ Request Retrieve Order Item
+
+    + Headers
+
+            Authorization: Token ABCDEF
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "state": "ready_to_ship"
+          }
+
++ Response 400 (application/json)
+
+    + Body
+
+          {
+              "code": "bad_request",
+              "message": "Job cannot be set as ready_to_ship"
+          }
+
+
+## Set Ex-factory Date [/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}/set_ex_factory_date/]
+## Set Job Ex-factory Date[POST]
+
+Just as an updated Ex-factory date can be provided for an entire order using the [Set Order Ex-Factory Date](#/group-factory-api/resource-factory.unmade.com-v2-orders-order_id-set_ex_factory_date-431ca688) 
+endpoint, this endpoint can be used to provide updated dates for individual jobs within an order.
+
++ Parameters
+    + order_id (string) - ID of the Order in the form of a uuid
+    + job_id (string) - ID of the job in the form of a uuid
+
++ Request Set Order Ex-factory Date
+    + Headers
+
+            Authorization: Token ABCDEF
+
+    + Body
+
+          {
+              "ex_factory_date": "YYYY-MM-DD"
+          }
+
++ Response 200 (application/json)
+
+    + Body
+
+          {
+              "id": "f00f9780-e026-42f5-9876-41abb3619334",
+              "ex_factory_date": "2024-08-19",
+              "arrive_by_date": "2024-08-29"
+          }
+
++ Response 401 (application/json)
+
+    + Body
+
+          {
+              "code": "authentication_failed",
+              "message": "Incorrect authentication credentials.",
+          }
+
++ Response 403 (application/json)
+
+    + Body
+
+          {
+              "code": "permission_denied",
+              "message": "You do not have permission to perform this action.",
+          }
+
++ Response 404 (application/json)
+
+    + Body
+
+          {
+              "code": "not_found",
+              "message": "Resource not found",
+          }
+
++ Response 405 (application/json)
+
+    + Body
+
+          {
+              "code": "method_not_allowed",
+              "message": "Method used is not allowed",
+          }
+
++ Response 406 (application/json)
+
+    + Body
+
+          {
+              "code": "not_acceptable",
+              "message": "Could not satisfy the request Accept header.",
+          }
+
++ Response 415 (application/json)
+
+    + Body
+
+          {
+              "code": "unsupported_media_type",
+              "message": "Unsupported media type in request.",
+          }

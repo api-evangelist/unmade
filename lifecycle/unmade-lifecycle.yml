@@ -1,0 +1,24 @@
+generated: '2026-07-21'
+method: searched
+source: https://engineering.unmade.com/api-docs/ + https://raw.githubusercontent.com/unmadeworks/api-docs/master/llms.txt
+versioning:
+  scheme: uri-path
+  current: v2
+  docs: https://engineering.unmade.com/api-docs/v2.html
+  notes: All V2 endpoints are prefixed /v2/; V2 is a superset of V1 and adds the
+    3D design view, partner data on orders/items, shipping-address retrieval,
+    order-item pagination, enhanced job states, materials data on jobs, and the
+    Ecommerce Orders API (replacing the V1 Orders API).
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No formal deprecation policy or RFC 8594 Sunset/Deprecation headers are
+    published. The docs state V1 "should only be used for historical context or
+    debugging existing implementations" and that new projects should use V2,
+    migrating V1 usage to equivalent V2 calls.
+sla: null
+status_page: null
+deprecated_operations: []
+notes: No public status page (status.unmade.com does not resolve) and no published
+  SLA were found. Company was acquired by Hi-Tech Apparel in July 2024; the API
+  docs repo remains maintained (last push June 2026).

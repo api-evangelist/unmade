@@ -1,0 +1,19 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unmade-embed-v1-openapi.json, openapi/unmade-embed-v2-openapi.json
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: tokenAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: 'Token authentication. Unmade provides your unique token; send it as `Authorization:
+    Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must
+    end with a trailing slash.'
+  sources:
+  - openapi/unmade-embed-v1-openapi.json
+  - openapi/unmade-embed-v2-openapi.json

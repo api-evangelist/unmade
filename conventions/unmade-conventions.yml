@@ -1,0 +1,55 @@
+generated: '2026-07-21'
+method: searched
+source: https://engineering.unmade.com/api-docs/ (API Blueprint, unmadeworks/api-docs)
+authentication:
+  style: token
+  header: Authorization
+  format: 'Token <token>'
+  notes: Tokens are issued by Unmade per partner. All API URLs are partner-specific
+    subdomains (https://{partner-subdomain}.embed.unmade.com/). The Factory API is
+    accessed at https://factory.unmade.com/ with the same token header.
+  artifact: authentication/unmade-authentication.yml
+url_conventions:
+  trailing_slash_required: true
+  notes: The URL of each endpoint must end with a trailing slash, otherwise unexpected
+    401 errors can occur (documented gotcha).
+idempotency:
+  supported: false
+  notes: No idempotency-key mechanism is documented in the V1 or V2 Integration
+    Reference.
+pagination:
+  style: page-number
+  request_params: [page]
+  response_fields: [count, next, previous, results]
+  page_size: 10
+  notes: Django REST Framework-style envelope. List Orders and List Order Items /
+    List Jobs are paginated at 10 objects per page; next/previous carry full URLs.
+filtering:
+  notes: List Orders supports state, created_before, created_after (YYYY-MM-DD);
+    the Factory API adds submitted_before, submitted_after, ecommerce_origin, and
+    reference filters.
+versioning:
+  scheme: uri-path
+  current: v2
+  notes: All V2 endpoints are prefixed /v2/. V1 remains available for historical
+    integrations; new projects should use V2.
+  artifact: lifecycle/unmade-lifecycle.yml
+error_envelope:
+  fields: [code, message, detail]
+  notes: Errors always include a machine-readable `code` and a human readable
+    `message`; a `detail` field is included where possible. The docs advise
+    logic against `code` and status, never string-matching `message`.
+  artifact: errors/unmade-problem-types.yml
+rate_limiting:
+  signaled: true
+  status: 429
+  error_code: throttle_request
+  notes: Throttled requests return HTTP 429 with code `throttle_request`. No
+    published numeric limits or rate-limit response headers.
+embedded_editor:
+  style: iframe + window.postMessage
+  notes: The Unmade Editor embeds via iframe on product pages; browser postMessage
+    events (design saved, add-to-cart, resize, interactions) flow to the host page.
+    Optional authenticated-user asset upload uses a JWT (HS512) `init` token signed
+    with a shared key; the payload carries a non-PII `user` identifier.
+  artifact: components/unmade-components.yml

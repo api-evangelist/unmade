@@ -1,0 +1,38 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unmade-embed-v2-openapi.json + https://engineering.unmade.com/api-docs/
+standards:
+- id: oauth2
+  conforms: false
+  evidence: 'Token authentication only (`Authorization: Token <token>`); no OAuth
+    2.0 flows are documented or declared.'
+- id: oidc
+  conforms: false
+  evidence: No OpenID Connect surface; /.well-known/openid-configuration returns 404.
+- id: jwt
+  conforms: true
+  evidence: The Unmade Editor authenticated-user flow uses JWT with the HS512
+    algorithm and a shared key to pass a non-PII user identifier into the iframe.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use a custom {code, message, detail} JSON envelope, not
+    application/problem+json.
+- id: pagination
+  conforms: true
+  evidence: DRF-style page-number pagination (count/next/previous/results, ?page=,
+    10 per page) on order and job list endpoints.
+- id: idempotency
+  conforms: false
+  evidence: No idempotency-key mechanism documented.
+- id: json-api
+  conforms: false
+  evidence: Plain JSON resources; no JSON:API media type.
+- id: scim
+  conforms: false
+  evidence: No SCIM surface.
+- id: odata
+  conforms: false
+  evidence: No OData surface.
+- id: rate-limiting-signaled
+  conforms: true
+  evidence: Throttled requests return HTTP 429 with error code `throttle_request`.

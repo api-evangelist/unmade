@@ -1,0 +1,17 @@
+generated: '2026-07-21'
+method: generated
+skills:
+- file: unmade-embed-editor-and-create-order.md
+  name: Embed the Unmade Editor and create an order from a saved design
+  api: openapi/unmade-embed-v2-openapi.json
+  operations: [getProducts, getDesigns, createOrders, getOrders2, ordersReleaseHold]
+- file: unmade-design-previews.md
+  name: Render design previews across products
+  api: openapi/unmade-embed-v2-openapi.json
+  operations: [getDesigns, transferPreviews, getDesigns3d]
+- file: unmade-factory-fulfillment.md
+  name: Fulfil production orders through the Factory API
+  api: openapi/unmade-embed-v2-openapi.json
+  operations: [factoryGetOrders, factoryGetOrders2, factoryGetOrdersJobs,
+    factoryOrdersSetInProduction, factoryOrdersSetReadyToShip,
+    factoryOrdersSetShipped, factoryOrdersSetTrackingNumber]

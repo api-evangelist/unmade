@@ -1,0 +1,4839 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Unmade Integration Reference V2",
+    "version": "1.0.0",
+    "description": "Welcome to the Unmade OS Integration Reference.\n\nSee [Integrating With Unmade](#/group-integrating-with-unmade) to get started.\n\nThis is **Version 2** of this documentation, which describes the usage of the `v2` API Endpoints. For **Version 1**, [click here](https://engineering.unmade.com/api-docs/#/).",
+    "x-apievangelist": {
+      "generated": "2026-07-21",
+      "method": "derived",
+      "source": "https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary_v2.apib",
+      "note": "Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file."
+    }
+  },
+  "servers": [
+    {
+      "url": "https://partner-subdomain.embed.unmade.com/"
+    }
+  ],
+  "paths": {
+    "/v2/products/{slug}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "method_not_allowed",
+                  "message": "Method used is not allowed"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_acceptable",
+                  "message": "Could not satisfy the request Accept header."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "unsupported_media_type",
+                  "message": "Unsupported media type in request."
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "throttle_request",
+                  "message": "tRequest was throttled."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Iframe endpoint",
+        "operationId": "getProducts",
+        "description": "The response to this request is a well-formed HTML document used as content for the `<iframe>`.\n\nUse this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an\nexternal e-commerce website.  Note that there are optional query parameters.\n\nDepending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on the page. We are happy to advise and support on this.",
+        "tags": [
+          "Unmade Editor"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "The product slug (will be agreed with you)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "description": "The price to display for the product",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ccy",
+            "in": "query",
+            "description": "The ISO 4217 currency code corresponding to the `price`",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "The IETF language tag to set localisation of the user interface",
+            "schema": {
+              "type": "string",
+              "default": "en-GB"
+            }
+          },
+          {
+            "name": "design_id",
+            "in": "query",
+            "description": "An Unmade Design ID that is compatible with this editor to be used as starting point",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "init",
+            "in": "query",
+            "description": "An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](#/group-api-setup#header-advanced-setup) for more information.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "description": "Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v2/designs/{design_id}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Request payload is not valid."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "method_not_allowed",
+                  "message": "Method used is not allowed"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_acceptable",
+                  "message": "Could not satisfy the request Accept header."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "unsupported_media_type",
+                  "message": "Unsupported media type in request."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve a design",
+        "operationId": "getDesigns",
+        "description": "",
+        "tags": [
+          "Design API"
+        ],
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "description": "ID of the Design in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v2/designs/{design_id}/3d/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "method_not_allowed",
+                  "message": "Method used is not allowed"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_acceptable",
+                  "message": "Could not satisfy the request Accept header."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "unsupported_media_type",
+                  "message": "Unsupported media type in request."
+                }
+              }
+            }
+          }
+        },
+        "summary": "3D View",
+        "operationId": "getDesigns3d",
+        "description": "",
+        "tags": [
+          "Design API"
+        ],
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "description": "ID of the Design in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scene",
+            "in": "query",
+            "description": "The name of the camera position to load. If not provided, load the default camera position of the model.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "autosize",
+            "in": "query",
+            "description": "If true, the canvas will be resized to fit the browser viewport and will resize if changed. If not provided, the canvas will remain at a fixed default size.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "interactive",
+            "in": "query",
+            "description": "If true, the model will have some limited mouse interactivity. Defaults to false.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "autorotate",
+            "in": "query",
+            "description": "If provided, the model will automatically rotate at a rate of 360 degrees in N seconds.",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/v2/designs/{design_id}/clear_placements/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Design has no non-optional placements"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Clear Placements",
+        "operationId": "designsClearPlacements",
+        "description": "",
+        "tags": [
+          "Design API"
+        ],
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "description": "ID of the Design in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/designs/{design_id}/clear_user_uploaded_placements/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Design has no user-uploaded content"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Clear User Uploaded Placements",
+        "operationId": "designsClearUserUploadedPlacements",
+        "description": "",
+        "tags": [
+          "Design API"
+        ],
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "description": "ID of the Design in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/designs/{design_id}/clone/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "size": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "size": [
+                    "Size M does not exist on product my-product. Available sizes: S, L, XL"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Clone Design",
+        "operationId": "designsClone",
+        "description": "",
+        "tags": [
+          "Design API"
+        ],
+        "parameters": [
+          {
+            "name": "design_id",
+            "in": "path",
+            "description": "ID of the Design in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "size": "M"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "size": {
+                    "type": "string",
+                    "description": "A valid size for the product this design belongs to (e.g. `S`, `M`, `L`)."
+                  }
+                },
+                "required": [
+                  "size"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/collections/{slug}/transfer_designs/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "designs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "product_slug": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "product_slug",
+                          "id"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "designs": [
+                    {
+                      "product_slug": "product-b",
+                      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    },
+                    {
+                      "product_slug": "product-c",
+                      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "design_id": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "design_id": [
+                    "Design 8a2b6517-e020-46fd-8cd0-ec441d4ac4b4 does not exist."
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Transfer Designs",
+        "operationId": "createCollectionsTransferDesigns",
+        "description": "",
+        "tags": [
+          "Design API"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Slug of the Collection",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "design_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/transfer_previews/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "authentication_failed",
+                  "message": "Incorrect authentication credentials."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "method_not_allowed",
+                  "message": "Method used is not allowed"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create Transfer Previews",
+        "operationId": "transferPreviews",
+        "description": "",
+        "tags": [
+          "Transfer Preview API"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "product": "<product-slug>",
+                "design": "<design-id>"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product": {
+                    "type": "string",
+                    "description": "Slug of the target product to render the design against."
+                  },
+                  "design": {
+                    "type": "string",
+                    "description": "ID of the Design to use as the source."
+                  }
+                },
+                "required": [
+                  "product",
+                  "design"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/designs/base_design_id/roster/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "c9b86945-45a6-4a43-beaf-361a7f0d8a77"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "object",
+                      "properties": {
+                        "last-name": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "error": {
+                                "type": "string"
+                              },
+                              "details": {
+                                "type": "object",
+                                "properties": {
+                                  "amended_text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "required": [
+                              "error",
+                              "details"
+                            ]
+                          }
+                        },
+                        "number": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "error": {
+                                "type": "string"
+                              },
+                              "details": {
+                                "type": "object",
+                                "properties": {
+                                  "amended_text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Request payload is not valid.",
+                  "detail": {
+                    "last-name": [
+                      {
+                        "error": "text_too_wide",
+                        "details": {
+                          "amended_text": "shorter text"
+                        }
+                      },
+                      {
+                        "error": "text_sanitised",
+                        "details": {
+                          "amended_text": "sanitised text"
+                        }
+                      }
+                    ],
+                    "number": [
+                      {
+                        "error": "illegal_characters",
+                        "details": {
+                          "amended_text": "text with no illegal chars"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "authentication_failed",
+                  "message": "Incorrect authentication credentials."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "method_not_allowed",
+                  "message": "Method used is not allowed"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_acceptable",
+                  "message": "Could not satisfy the request Accept header."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "unsupported_media_type",
+                  "message": "Unsupported media type in request."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a member design",
+        "operationId": "createDesignsBaseDesignIdRoster",
+        "description": "#### Roster field rules\n\nTo create a member design, a single `roster_member` object containing the required values for all roster fields in the \ntemplate roster design is provided:",
+        "tags": [
+          "Design API"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "roster_member": {
+                  "<roster_field_a>": "foo",
+                  "<roster_field_b": "99"
+                }
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roster_member": {
+                    "type": "object",
+                    "properties": {
+                      "<roster_field_a>": {
+                        "type": "string"
+                      },
+                      "<roster_field_b": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/outfits/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "outfit_spec": {
+                      "type": "string"
+                    },
+                    "editor_user": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "string"
+                    },
+                    "pieces": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "slot_slug": {
+                            "type": "string"
+                          },
+                          "design_id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "slot_slug",
+                          "design_id"
+                        ]
+                      }
+                    },
+                    "previews": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "type": "string"
+                          },
+                          "thumbnail": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "scenes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "name": "My Outfit",
+                  "outfit_spec": "my-outfit-spec",
+                  "editor_user": "3fad6a89-8cec-4350",
+                  "created": "2024-01-15T10:30:00Z",
+                  "pieces": [
+                    {
+                      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                      "slot_slug": "top",
+                      "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+                    },
+                    {
+                      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                      "slot_slug": "bottom",
+                      "design_id": "5e39f63b-a084-4d80-ae29-1fdb87a79922"
+                    }
+                  ],
+                  "previews": [
+                    {
+                      "name": "front",
+                      "image": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/",
+                      "thumbnail": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/"
+                    }
+                  ],
+                  "scenes": [
+                    {
+                      "name": "default",
+                      "url": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "object",
+                      "properties": {
+                        "pieces": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Invalid input.",
+                  "detail": {
+                    "pieces": "Missing pieces for slots: bottom."
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "authentication_failed",
+                  "message": "Incorrect authentication credentials."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "permission_denied",
+                  "message": "You do not have permission to perform this action."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create an Outfit",
+        "operationId": "createOutfits",
+        "description": "Creates a new outfit from a set of designs, one per slot defined by the given outfit spec.\n\nAll slots defined in the outfit spec must be provided. Providing an unknown slot or supplying two pieces for the same \nslot will return a 400 error.",
+        "tags": [
+          "Outfit API"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "outfit_spec": "my-outfit-spec",
+                "name": "My Outfit",
+                "editor_user": "3fad6a89-8cec-4350",
+                "pieces": [
+                  {
+                    "slot_slug": "top",
+                    "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+                  },
+                  {
+                    "slot_slug": "bottom",
+                    "design_id": "5e39f63b-a084-4d80-ae29-1fdb87a79922"
+                  }
+                ]
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "outfit_spec": {
+                    "type": "string",
+                    "description": "Slug of the Outfit Spec to use. Defines which slots must be filled."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "A human-readable label for this outfit."
+                  },
+                  "editor_user (string, optional) - The `external_id` of an existing EditorUser to associate with this outfit. Used to link the outfit to a specific end": {
+                    "type": "string",
+                    "description": "user."
+                  },
+                  "pieces": {
+                    "type": "array",
+                    "description": "One object per slot in the outfit spec.",
+                    "items": {}
+                  }
+                },
+                "required": [
+                  "outfit_spec",
+                  "pieces"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/outfits/{outfit_id}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "outfit_spec": {
+                      "type": "string"
+                    },
+                    "editor_user": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "string"
+                    },
+                    "pieces": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "slot_slug": {
+                            "type": "string"
+                          },
+                          "design_id": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "slot_slug",
+                          "design_id"
+                        ]
+                      }
+                    },
+                    "previews": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "image": {
+                            "type": "string"
+                          },
+                          "thumbnail": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "scenes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "name": "My Outfit",
+                  "outfit_spec": "my-outfit-spec",
+                  "editor_user": "3fad6a89-8cec-4350",
+                  "created": "2024-01-15T10:30:00Z",
+                  "pieces": [
+                    {
+                      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                      "slot_slug": "top",
+                      "design_id": "8a2b6517-e020-46fd-8cd0-ec441d4ac4b4"
+                    },
+                    {
+                      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                      "slot_slug": "bottom",
+                      "design_id": "5e39f63b-a084-4d80-ae29-1fdb87a79922"
+                    }
+                  ],
+                  "previews": [
+                    {
+                      "name": "front",
+                      "image": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/",
+                      "thumbnail": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/"
+                    }
+                  ],
+                  "scenes": [
+                    {
+                      "name": "default",
+                      "url": "https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "authentication_failed",
+                  "message": "Incorrect authentication credentials."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "permission_denied",
+                  "message": "You do not have permission to perform this action."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Retrieve an Outfit",
+        "operationId": "getOutfits",
+        "description": "Returns the full representation of an outfit, including its pieces, previews, and any available 3D scenes.",
+        "tags": [
+          "Outfit API"
+        ],
+        "parameters": [
+          {
+            "name": "outfit_id",
+            "in": "path",
+            "description": "ID of the Outfit in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/outfits/{outfit_id}/previews/{preview_id}/preview/": {
+      "get": {
+        "responses": {
+          "308": {
+            "description": "Permanent Redirect",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Outfit Preview",
+        "operationId": "getOutfitsPreviewsPreview",
+        "description": "Returns the full-size rendered image of the outfit for this preview.",
+        "tags": [
+          "Outfit API"
+        ],
+        "parameters": [
+          {
+            "name": "outfit_id",
+            "in": "path",
+            "description": "ID of the Outfit",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "preview_id",
+            "in": "path",
+            "description": "ID of the OutfitPreview (obtained from the `previews` array on the outfit)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v2/outfits/{outfit_id}/previews/{preview_id}/thumbnail/": {
+      "get": {
+        "responses": {
+          "308": {
+            "description": "Permanent Redirect",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Outfit Thumbnail",
+        "operationId": "getOutfitsPreviewsThumbnail",
+        "description": "Returns a smaller thumbnail version of the outfit preview image.",
+        "tags": [
+          "Outfit API"
+        ],
+        "parameters": [
+          {
+            "name": "outfit_id",
+            "in": "path",
+            "description": "ID of the Outfit",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "preview_id",
+            "in": "path",
+            "description": "ID of the OutfitPreview (obtained from the `previews` array on the outfit)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v2/outfits/{outfit_id}/3d/{avatar_scene_slug}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_found",
+                  "message": "Not found."
+                }
+              }
+            }
+          }
+        },
+        "summary": "3D View",
+        "operationId": "getOutfits3d",
+        "description": "",
+        "tags": [
+          "Outfit API"
+        ],
+        "parameters": [
+          {
+            "name": "outfit_id",
+            "in": "path",
+            "description": "ID of the Outfit",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "avatar_scene_slug",
+            "in": "path",
+            "description": "Slug of the avatar scene (obtained from the `scenes` array on the outfit)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "autosize",
+            "in": "query",
+            "description": "If true, the canvas resizes to fit the browser viewport.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "interactive",
+            "in": "query",
+            "description": "If true, the model has limited mouse interactivity. Defaults to false.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "autorotate",
+            "in": "query",
+            "description": "If provided, the model automatically rotates at 360 degrees in N seconds.",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/v2/orders/": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "c9b86945-45a6-4a43-beaf-361a7f0d8a77"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Request payload is not valid."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "authentication_failed",
+                  "message": "Incorrect authentication credentials."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "permission_denied",
+                  "message": "You do not have permission to perform this action."
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "method_not_allowed",
+                  "message": "Method used is not allowed"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "not_acceptable",
+                  "message": "Could not satisfy the request Accept header."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "unsupported_media_type",
+                  "message": "Unsupported media type in request."
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create an Order",
+        "operationId": "createOrders",
+        "description": "Once an order has been placed on the ecommerce platform, the Unmade system should be notified to begin the process of\ngenerating manufacturing files. To do this, pass a unique order reference, and one or more order items to this endpoint\nvia an HTTP POST request. Each item must reference an Unmade Design ID. The same Design ID can be used for multiple\norder items, if provided with different `size` values inside the `options` object. To order multiple identical garments\nin the same size, use the `quantity` value. Each item must also have a `unit_price` object with both a `value` and\n`currency` specified. Depending on the nature of your integration with Unmade, a `shipping_address` may also be required\nfor order creation.\n\nOptionally, arbitrary key-value pairs can be passed as a `partner_data` object at both the order and order item level. \nThis may be used by your system to provide your internal ID or similar reference for this order which may be relevant\nfor integration with your vendor. These key-value pairs will also be present on the manufacturing order and jobs \nassociated with this ecommerce order.\n\nIf you want to create the order and keep it on hold for subsequent updates to the `partner_data` you might do it by\nsending the boolean value for `set_order_on_hold` as `true`.\n\nYou may optionally provide a boolean value for the `is_test_order` field to indicate a given order is not a real\nproduction order. If this value is set to `true`, the order will be omitted from Unmade billing processes. Speak to your\nUnmade representative for more information about recommended integration testing procedures.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "reference": "YOUR UNIQUE ORDER REFERENCE",
+                "order_items": [
+                  {
+                    "design": "UNMADE-DESIGN-ID",
+                    "reference": "YOUR ORDER-ITEM REFERENCE",
+                    "quantity": 2,
+                    "unit_price": {
+                      "value": "99.99",
+                      "currency": "USD"
+                    },
+                    "options": {
+                      "size": "M"
+                    },
+                    "partner_data": {
+                      "barcode": "98323928238372"
+                    }
+                  }
+                ],
+                "partner_data": {
+                  "example_po_number": "example_number",
+                  "example_po_type": "example_value"
+                },
+                "shipping_address": {
+                  "name": "John Smith",
+                  "company_name": "unmade",
+                  "address_1": "152 Strand",
+                  "address_2": "Somerset House",
+                  "city": "London",
+                  "postal_code": "WC2R 1LA",
+                  "country": "GB",
+                  "country_area": "London",
+                  "phone": "0123456789",
+                  "email": "john@smith.com"
+                }
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reference": {
+                    "type": "string",
+                    "description": "Your unique reference for this order. Max 256 characters."
+                  },
+                  "order_items": {
+                    "type": "array",
+                    "description": "One or more items to include in the order.",
+                    "items": {}
+                  },
+                  "partner_data": {
+                    "type": "object",
+                    "properties": {},
+                    "description": "Arbitrary key-value pairs to associate with the order as a whole (e.g. PO number, shipping method)."
+                  },
+                  "shipping_address": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Recipient full name. Max 256 characters."
+                      },
+                      "company_name": {
+                        "type": "string",
+                        "description": "Company name. Max 256 characters."
+                      },
+                      "address_1": {
+                        "type": "string",
+                        "description": "First line of address. Max 256 characters."
+                      },
+                      "address_2": {
+                        "type": "string",
+                        "description": "Second line of address. Max 256 characters."
+                      },
+                      "city": {
+                        "type": "string",
+                        "description": "City. Max 256 characters."
+                      },
+                      "postal_code": {
+                        "type": "string",
+                        "description": "Postal or ZIP code. Max 20 characters."
+                      },
+                      "country": {
+                        "type": "string",
+                        "description": "ISO 3166-1 alpha-2 country code (e.g. `\"GB\"`)."
+                      },
+                      "country_area": {
+                        "type": "string",
+                        "description": "State, province, or region. Max 128 characters."
+                      },
+                      "phone": {
+                        "type": "string",
+                        "description": "Phone number. Max 30 characters."
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "Email address. Max 256 characters."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "address_1",
+                      "city",
+                      "postal_code",
+                      "country",
+                      "country_area"
+                    ],
+                    "description": "Delivery address for the order."
+                  }
+                },
+                "required": [
+                  "reference",
+                  "order_items",
+                  "shipping_address"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "List Orders",
+        "operationId": "getOrders",
+        "description": "This endpoint can be used to retrieve the complete list of all orders that have been created to date.\n\nThis endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to \nselect the desired page.\n\nYou can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter \nthe listed orders by their creation date.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Show orders with this state (see Order States section above for allowed values)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "description": "Show orders created before this date (`YYYY-MM-DD`)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "description": "Show orders created after this date (`YYYY-MM-DD`)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "reference": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "string"
+                    },
+                    "submitted": {
+                      "type": "string"
+                    },
+                    "in_production": {
+                      "type": "string"
+                    },
+                    "ready_to_ship": {
+                      "nullable": true
+                    },
+                    "shipped": {
+                      "nullable": true
+                    },
+                    "num_items": {
+                      "type": "number"
+                    },
+                    "order_items": {
+                      "type": "string"
+                    },
+                    "shipping_address": {
+                      "type": "string"
+                    },
+                    "manufacturing_order": {
+                      "type": "string"
+                    },
+                    "partner_data": {
+                      "type": "object",
+                      "properties": {
+                        "my_partner_data_key": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "factory": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "slug": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "tracking_data": {
+                      "type": "object",
+                      "properties": {
+                        "tracking_number": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "is_order_portal": {
+                      "type": "boolean"
+                    },
+                    "is_test_order": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "2c9c3662-d679-4e13-bfdb-7c2580c80b46",
+                  "reference": "UMD12345",
+                  "created": "2024-07-28T18:05:36.806548Z",
+                  "submitted": "2024-07-29T18:05:53.714553Z",
+                  "in_production": "2024-08-01T08:05:53.714553Z",
+                  "ready_to_ship": null,
+                  "shipped": null,
+                  "num_items": 12,
+                  "order_items": "https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/items/",
+                  "shipping_address": "https://partner.embed.unmade.com/v2/orders/2c9c3662-d679-4e13-bfdb-7c2580c80b46/shipping_address/",
+                  "manufacturing_order": "https://factory.unmade.com/v2/orders/fd792895-1e32-41b1-90af-683f0cf9f753/",
+                  "partner_data": {
+                    "my_partner_data_key": "foo"
+                  },
+                  "factory": {
+                    "name": "Factory A",
+                    "slug": "factory-a"
+                  },
+                  "state": "submitted",
+                  "tracking_data": {
+                    "tracking_number": ""
+                  },
+                  "is_order_portal": false,
+                  "is_test_order": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve an existing order",
+        "operationId": "getOrders2",
+        "description": "After an order has been created, this endpoint can be used to retrieve order data for example to check the order state.\n\nDepending on the nature of your integration with Unmade, the contents of the `tracking_data` object may also update as \norders progress through the various production states.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/partner_data/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "my_partner_data_key": {
+                      "type": "string"
+                    },
+                    "another-key": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "my_partner_data_key": "foo",
+                  "another-key": "bar"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve an existing order Partner Data",
+        "operationId": "getOrdersPartnerData",
+        "description": "After an order has been created, this endpoint can be used to retrieve the contents of partner data of the order.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      },
+      "patch": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "previous_key": {
+                      "type": "string"
+                    },
+                    "key1": {
+                      "type": "string"
+                    },
+                    "key2": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "previous_key": "value_a",
+                  "key1": "value_x",
+                  "key2": "value_y"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Partner data is not available for updates in order state"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Add key/values to Partner Data for existing order",
+        "operationId": "patchOrdersPartnerData",
+        "description": "When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "key1": "value_x",
+                "key2": "value_y"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "key1": {
+                      "type": "string"
+                    },
+                    "key2": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "key1": "value_x",
+                  "key2": "value_y"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Partner data is not available for updates in order state"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Update Partner Data for existing order",
+        "operationId": "updateOrdersPartnerData",
+        "description": "When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order,\nremoving any pre-existing key/values.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/shipping_address/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "company_name": {
+                      "type": "string"
+                    },
+                    "address_1": {
+                      "type": "string"
+                    },
+                    "address_2": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "country_area": {
+                      "type": "string"
+                    },
+                    "postal_code": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "name": "John Smith",
+                  "company_name": "unmade",
+                  "address_1": "152 Strand",
+                  "address_2": "Somerset House",
+                  "city": "London",
+                  "country_area": "London",
+                  "postal_code": "WC2R 1LA",
+                  "country": "UK",
+                  "phone": "0123456789",
+                  "email": "js@example.com"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve shipping address for existing order",
+        "operationId": "getOrdersShippingAddress",
+        "description": "When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the\nshipping address  for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an\nappropriate error message.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/items": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "List Order Items",
+        "operationId": "getOrdersItems",
+        "description": "This endpoint can be used to retrieve a paginated list of the individual items in a given order. We preserve the order\nin which the items were sent in the original order creation payload. The `id` of each item is generated automatically\nby Unmade when the order is created. You may choose to store this ID in your systems in order to reference each item\ndirectly in future.\n\nEach order item has three associated Design IDs which have different relationships depending on how the relevant \ndesigns were created, as well as the type of order. In the simplest case these Design IDs may be identical, but will \nusually be different, depending on a variety of factors.\n\n- `input_design_id`: The Design ID which you originally sent in the Order creation payload to create this item\n\n- `manufacturing_design_id`: The ID of the design which is being used as the source of all manufacturing data for this \n    item. This will be different to the `input_design_id` if you specified a different size to that of the order \n    item design: in this case Unmade will generate a new design in the specified size\n\n- `source_design_id`: The ID of the Design which was originally saved by the user in the editor. If the Roster API has \n    been used to create the member design for this item, this ID will be the ID of the original roster **template** \n    design.\n\nThese Design IDs can be used in the Design API to view personalisation data or fetch previews relevant to this order \nitem. In most cases you'll want to use the `design_id` value for this purpose.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/items/{item_id}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve Order Item",
+        "operationId": "getOrdersItems2",
+        "description": "This endpoint can be used to retrieve data for a specific item in a given order. See the list representation for a more\ndetailed description of this data.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "description": "ID of the item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/items/{item_id}/partner_data/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "my_partner_data_key": {
+                      "type": "string"
+                    },
+                    "another-key": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "my_partner_data_key": "foo",
+                  "another-key": "bar"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Partner data is not available for updates in order state"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve an existing order item Partner Data",
+        "operationId": "getOrdersItemsPartnerData",
+        "description": "After an order has been created, this endpoint can be used to retrieve the contents of partner data for an order item.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "description": "ID of the item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      },
+      "patch": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "previous_key": {
+                      "type": "string"
+                    },
+                    "key1": {
+                      "type": "string"
+                    },
+                    "key2": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "previous_key": "value_a",
+                  "key1": "value_x",
+                  "key2": "value_y"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Partner data is not available for updates in order state"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Add key/values for existing order item",
+        "operationId": "patchOrdersItemsPartnerData",
+        "description": "When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order item.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "description": "ID of the item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "key1": "value_x",
+                "key2": "value_y"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "key1": {
+                      "type": "string"
+                    },
+                    "key2": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "key1": "value_x",
+                  "key2": "value_y"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Partner data is not available for updates in order state"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Update Partner Data for existing order item",
+        "operationId": "updateOrdersItemsPartnerData",
+        "description": "When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order item,\nremoving any pre-existing key/values.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "description": "ID of the item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/release_hold/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "state": "hold"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Order's hold cannot be released"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Release Order",
+        "operationId": "ordersReleaseHold",
+        "description": "This endpoint can be used to release an order to production if their state is `hold`.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/v2/orders/{order_id}/set_cancelled/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "state": "cancelled"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Order cannot be set as cancelled"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cancel Order",
+        "operationId": "ordersSetCancelled",
+        "description": "This endpoint can be used to cancel an order after creation. Depending on production and billing arrangements between\nyou, your vendor and Unmade, cancellation may not be possible if the order has progressed past a certain state. Contact\nUnmade for details of when cancellation is possible for your specific case.",
+        "tags": [
+          "Ecommerce Orders API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "List Orders",
+        "operationId": "factoryGetOrders",
+        "description": "This endpoint can be used to retrieve the complete list of all orders that have been created to date.\n\nThis endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to \nselect the desired page.\n\nYou can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter \nthe listed orders by their creation date.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Show orders with this state (see Order States section above for allowed values)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "description": "Show orders created before this date (`YYYY-MM-DD`)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "description": "Show orders created after this date (`YYYY-MM-DD`)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "submitted_before",
+            "in": "query",
+            "description": "Show orders submitted for manufacturing before this date (`YYYY-MM-DD`)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "submitted_after",
+            "in": "query",
+            "description": "Show orders submitted for manufacturing after this date (`YYYY-MM-DD`)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ecommerce_origin (optional, string) - Show orders with `ecommerce_origin` containing specified string",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "reference",
+            "in": "query",
+            "description": "Show orders with `reference` containing specified string",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "string"
+                    },
+                    "submitted": {
+                      "type": "string"
+                    },
+                    "reference": {
+                      "type": "string"
+                    },
+                    "num_jobs": {
+                      "type": "number"
+                    },
+                    "jobs": {
+                      "type": "string"
+                    },
+                    "shipping_address": {
+                      "type": "string"
+                    },
+                    "ecommerce_order": {
+                      "type": "string"
+                    },
+                    "factory": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "slug": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "partner_data": {
+                      "type": "object",
+                      "properties": {
+                        "my_partner_data_key": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "attachments": {
+                      "type": "object",
+                      "properties": {
+                        "packing_slip": {
+                          "type": "string"
+                        },
+                        "commercial_invoice": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "summary": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "tracking_data": {
+                      "type": "object",
+                      "properties": {}
+                    },
+                    "destination_country": {
+                      "type": "string"
+                    },
+                    "shipped": {
+                      "nullable": true
+                    },
+                    "cancelled": {
+                      "nullable": true
+                    }
+                  }
+                },
+                "example": {
+                  "id": "a38c331d-cc6d-4e03-b514-91e27ae8b02e",
+                  "created": "2017-07-31T16:52:50.905026Z",
+                  "submitted": "2017-07-31T17:44:50.905026Z",
+                  "reference": "mc_testorder6",
+                  "num_jobs": 4,
+                  "jobs": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/jobs/",
+                  "shipping_address": "https://factory.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4/shipping_address/",
+                  "ecommerce_order": "https://partner.embed.unmade.com/v2/orders/a882ac66-9374-4910-8c93-9ea45a470bd4",
+                  "factory": {
+                    "name": "Factory A",
+                    "slug": "factory-a"
+                  },
+                  "partner_data": {
+                    "my_partner_data_key": "foo"
+                  },
+                  "attachments": {
+                    "packing_slip": "https://cdn.unmade.com/order/900243544001/attachments/packing_slip.pdf",
+                    "commercial_invoice": "https://cdn.unmade.com/order/900243544001/attachments/import_invoice.pdf"
+                  },
+                  "summary": "https://cdn.unmade.com/order/900243544001/attachments/summary.pdf",
+                  "state": "in_production",
+                  "tracking_data": {},
+                  "destination_country": "US",
+                  "shipped": null,
+                  "cancelled": null
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve an existing order",
+        "operationId": "factoryGetOrders2",
+        "description": "After an order has been submitted to production, you can use this endpoint to pull order data into your own systems or\nquery production states.\n\nThe `attachments` object contains URLs to any paperwork or documentation associated with this order.\n\n**Note**: Any `attachments` containing sensitive information such as customer shipping addresses will only be present\nin the response if the order is state `in_production` or `ready_to_ship`.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/shipping_address/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "company_name": {
+                      "type": "string"
+                    },
+                    "address_1": {
+                      "type": "string"
+                    },
+                    "address_2": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "country_area": {
+                      "type": "string"
+                    },
+                    "postal_code": {
+                      "type": "string"
+                    },
+                    "country": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "name": "John Smith",
+                  "company_name": "unmade",
+                  "address_1": "152 Strand",
+                  "address_2": "Somerset House",
+                  "city": "London",
+                  "country_area": "London",
+                  "postal_code": "WC2R 1LA",
+                  "country": "UK",
+                  "phone": "0123456789",
+                  "email": "js@example.com"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve Shipping Address",
+        "operationId": "factoryGetOrdersShippingAddress",
+        "description": "When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the \nshipping address for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an \nappropriate error message.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/set_in_production/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "state": "in_production"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Order cannot be set as in_production"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Set In Production",
+        "operationId": "factoryOrdersSetInProduction",
+        "description": "Once an order has been ingested into your systems and has entered production with your vendor, this endpoint is used to\ninform Unmade that production has begun. This state change is automatically propagated to the associated Ecommerce order\nto allow the end consumer to be notified if required. This state change also automatically propagates to all associated\njobs in this order.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/set_ready_to_ship/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "state": "ready_to_ship"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Order cannot be set as ready_to_ship"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Set Ready to Ship",
+        "operationId": "factoryOrdersSetReadyToShip",
+        "description": "Once an order has completed production and is ready to ship from your vendor, this endpoint is used to inform Unmade \nthat the order is ready to ship. This state change is automatically propagated to the associated Ecommerce order to \nallow the end consumer to be notified if required. This state change also automatically propagates to all associated\njobs in this order.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/set_shipped/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "state": "shipped"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Order cannot be set as shipped"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Set Shipped",
+        "operationId": "factoryOrdersSetShipped",
+        "description": "Once an order has finally been shipped from your vendor, this endpoint is used to inform Unmade that the order is on the\nway to the destination address. This state change is automatically propagated to the associated Ecommerce order to \nallow the end consumer to be notified if required. This state change also automatically propagates to all associated\njobs in this order.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/set_tracking_number/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "tracking_data": {
+                      "type": "object",
+                      "properties": {
+                        "tracking_number": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "tracking_data": {
+                    "tracking_number": "123456789"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Set Tracking Number",
+        "operationId": "factoryOrdersSetTrackingNumber",
+        "description": "If relevant for the shipping configuration for your integration, this endpoint can be used to provide a tracking number\nthat has been generated in a third-party shipping system. If provided, this tracking number propagates up to this \norder's associated Ecommerce order to allow the Ecommerce system to pass it on to the end-consumer.\n\nThis endpoint can only be used if the given order is `ready_to_ship`.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "tracking_number": "123456789"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/set_ex_factory_date/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "ex_factory_date": {
+                      "type": "string"
+                    },
+                    "arrive_by_date": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "ex_factory_date": "2024-08-19",
+                  "arrive_by_date": "2024-08-29"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Set Order Ex-factory Date",
+        "operationId": "factoryOrdersSetExFactoryDate",
+        "description": "On creation, Unmade assigns all production jobs an Ex-factory date based on a lead time estimate which has been \npre-agreed with you and your vendor. This serves as a target date by which the piece is expected to have left the \nfactory location. Jobs within an order can have different Ex-factory dates depending on per-product lead times. In the \ncase of unforeseen delays (or unexpectedly quicker production!) this endpoint can be used to pass an updated Ex-factory \ndate to Unmade. If provided, all jobs in the given order are assigned this updated Ex-factory date. This update also \npropagates up to this order's associated Ecommerce order to allow the Ecommerce system to notify to the end-consumer.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "ex_factory_date": "YYYY-MM-DD"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/jobs": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "List Jobs",
+        "operationId": "factoryGetOrdersJobs",
+        "description": "This endpoint can be used to retrieve a paginated list of the individual jobs associated with a given manufacturing \norder.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Retrieve Job",
+        "operationId": "factoryGetOrdersJobs2",
+        "description": "This endpoint can be used to retrieve data for a specific job in a given order. In addition to basic metadata, this \nendpoint provides:\n\n- Structured data describing the various customisation options chosen by the user for this job (eg. selected \n   **components**, **text** and **colours**)\n\n- URLs to one or more `previews` for this job\n\n- The URL for a zip file containing all manufacturing files for this job\n\n- The URL to this job's ticket PDF\n\n### Job States\n\nJobs flow through the same states as [orders](#/group-factory-api#header-order-states), but jobs within an order may each have different states.\n\nJobs also have an additional state: `not_ready` which is used when a given job has been very recently created. This state indicates that manufacturing files are still being generated and are not yet available for download.  You will notice that the `manufacturing_files_zip` field will be `null` for jobs which are still in the `not_ready` state.\n\nWhen a job progresses from state `not_ready` to `new`, the `manufacturing_files_zip` URL will become available. This means that all manufacturing files are ready, and the URL can then be used to download all manufacturing files for a given job.\n\nThe URLs provided by the `manufacturing_files_zip` and `ticket` fields do not require authentication, so can be safely stored and passed to any other systems that may be part of your order management workflow.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID of the job in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}/set_in_production/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "state": "in_production"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Job cannot be set as in_production"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Set In Production",
+        "operationId": "factoryOrdersJobsSetInProduction",
+        "description": "If a given order consists of a large number of jobs, production for these jobs may begin at different times. In such a \ncase, it is possible to inform Unmade that individual jobs have begun production using this endpoint. This updates the \nstate of this job's order to `in_production`, but does not affect the state of the other jobs in this order.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID of the job in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}/set_ready_to_ship/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "state": "ready_to_ship"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": "bad_request",
+                  "message": "Job cannot be set as ready_to_ship"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Set Ready to Ship",
+        "operationId": "factoryOrdersJobsSetReadyToShip",
+        "description": "If a given order consists of a large number of jobs, production for these jobs may be completed at different times. In \nsuch a case, it is possible to inform Unmade that individual jobs have completed production and are ready to ship using \nthis endpoint. When all jobs in a given order are `ready_to_ship`, the order itself is marked as `ready_to_ship`.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID of the job in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ]
+      }
+    },
+    "/factory.unmade.com/v2/orders/{order_id}/jobs/{job_id}/set_ex_factory_date/": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "ex_factory_date": {
+                      "type": "string"
+                    },
+                    "arrive_by_date": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "f00f9780-e026-42f5-9876-41abb3619334",
+                  "ex_factory_date": "2024-08-19",
+                  "arrive_by_date": "2024-08-29"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {},
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "headers": {},
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "headers": {},
+            "content": {}
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "headers": {},
+            "content": {}
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "headers": {},
+            "content": {}
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "headers": {},
+            "content": {}
+          }
+        },
+        "summary": "Set Job Ex-factory Date",
+        "operationId": "factoryOrdersJobsSetExFactoryDate",
+        "description": "Just as an updated Ex-factory date can be provided for an entire order using the [Set Order Ex-Factory Date](#/group-factory-api/resource-factory.unmade.com-v2-orders-order_id-set_ex_factory_date-431ca688) \nendpoint, this endpoint can be used to provide updated dates for individual jobs within an order.",
+        "tags": [
+          "Factory API"
+        ],
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the Order in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "job_id",
+            "in": "path",
+            "description": "ID of the job in the form of a uuid",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "e.g. Token ABCDEF",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Token ABCDEF"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "ex_factory_date": "YYYY-MM-DD"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "tokenAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash."
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Design API"
+    },
+    {
+      "name": "Ecommerce Orders API"
+    },
+    {
+      "name": "Factory API"
+    },
+    {
+      "name": "Outfit API"
+    },
+    {
+      "name": "Transfer Preview API"
+    },
+    {
+      "name": "Unmade Editor"
+    }
+  ],
+  "security": [
+    {
+      "tokenAuth": []
+    }
+  ]
+}
