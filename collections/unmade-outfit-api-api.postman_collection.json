@@ -1,0 +1,1203 @@
+{
+  "item": [
+    {
+      "id": "144485fe-abdc-4624-a761-dacaefbd96e9",
+      "name": "Outfit API",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7eba3118-0da7-4938-a00c-0e7a51c62ecc",
+          "name": "Create an Outfit",
+          "request": {
+            "name": "Create an Outfit",
+            "description": {
+              "content": "Creates a new outfit from a set of designs, one per slot defined by the given outfit spec.\n\nAll slots defined in the outfit spec must be provided. Providing an unknown slot or supplying two pieces for the same \nslot will return a 400 error.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "outfits",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"outfit_spec\": \"<string>\",\n  \"pieces\": [],\n  \"name\": \"<string>\",\n  \"editor_user (string, optional) - The `external_id` of an existing EditorUser to associate with this outfit. Used to link the outfit to a specific end\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6e64e991-aecb-4830-abd8-d74a0be1d656",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"outfit_spec\": \"my-outfit-spec\",\n  \"name\": \"My Outfit\",\n  \"editor_user\": \"3fad6a89-8cec-4350\",\n  \"pieces\": [\n    {\n      \"slot_slug\": \"top\",\n      \"design_id\": \"8a2b6517-e020-46fd-8cd0-ec441d4ac4b4\"\n    },\n    {\n      \"slot_slug\": \"bottom\",\n      \"design_id\": \"5e39f63b-a084-4d80-ae29-1fdb87a79922\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"f00f9780-e026-42f5-9876-41abb3619334\",\n  \"name\": \"My Outfit\",\n  \"outfit_spec\": \"my-outfit-spec\",\n  \"editor_user\": \"3fad6a89-8cec-4350\",\n  \"created\": \"2024-01-15T10:30:00Z\",\n  \"pieces\": [\n    {\n      \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"slot_slug\": \"top\",\n      \"design_id\": \"8a2b6517-e020-46fd-8cd0-ec441d4ac4b4\"\n    },\n    {\n      \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n      \"slot_slug\": \"bottom\",\n      \"design_id\": \"5e39f63b-a084-4d80-ae29-1fdb87a79922\"\n    }\n  ],\n  \"previews\": [\n    {\n      \"name\": \"front\",\n      \"image\": \"https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/\",\n      \"thumbnail\": \"https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/\"\n    }\n  ],\n  \"scenes\": [\n    {\n      \"name\": \"default\",\n      \"url\": \"https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f1bd303f-1bb2-45f8-a3ad-f98d1674ffcf",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"outfit_spec\": \"my-outfit-spec\",\n  \"name\": \"My Outfit\",\n  \"editor_user\": \"3fad6a89-8cec-4350\",\n  \"pieces\": [\n    {\n      \"slot_slug\": \"top\",\n      \"design_id\": \"8a2b6517-e020-46fd-8cd0-ec441d4ac4b4\"\n    },\n    {\n      \"slot_slug\": \"bottom\",\n      \"design_id\": \"5e39f63b-a084-4d80-ae29-1fdb87a79922\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"message\": \"Invalid input.\",\n  \"detail\": {\n    \"pieces\": \"Missing pieces for slots: bottom.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d8c01a2b-7c31-4fa2-a61b-e58c63014d18",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"outfit_spec\": \"my-outfit-spec\",\n  \"name\": \"My Outfit\",\n  \"editor_user\": \"3fad6a89-8cec-4350\",\n  \"pieces\": [\n    {\n      \"slot_slug\": \"top\",\n      \"design_id\": \"8a2b6517-e020-46fd-8cd0-ec441d4ac4b4\"\n    },\n    {\n      \"slot_slug\": \"bottom\",\n      \"design_id\": \"5e39f63b-a084-4d80-ae29-1fdb87a79922\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"authentication_failed\",\n  \"message\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c40cafe6-1932-4b90-bb9b-6afd9c28ac98",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"outfit_spec\": \"my-outfit-spec\",\n  \"name\": \"My Outfit\",\n  \"editor_user\": \"3fad6a89-8cec-4350\",\n  \"pieces\": [\n    {\n      \"slot_slug\": \"top\",\n      \"design_id\": \"8a2b6517-e020-46fd-8cd0-ec441d4ac4b4\"\n    },\n    {\n      \"slot_slug\": \"bottom\",\n      \"design_id\": \"5e39f63b-a084-4d80-ae29-1fdb87a79922\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"permission_denied\",\n  \"message\": \"You do not have permission to perform this action.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a8d03eaf-31e4-4b6d-9ea5-5942c80cd5ea",
+          "name": "Retrieve an Outfit",
+          "request": {
+            "name": "Retrieve an Outfit",
+            "description": {
+              "content": "Returns the full representation of an outfit, including its pieces, previews, and any available 3D scenes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "outfits",
+                ":outfit_id",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "outfit_id",
+                  "description": "(Required) ID of the Outfit in the form of a uuid"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b26586e3-aeb8-4e96-8d57-605c3cf695f0",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit in the form of a uuid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"f00f9780-e026-42f5-9876-41abb3619334\",\n  \"name\": \"My Outfit\",\n  \"outfit_spec\": \"my-outfit-spec\",\n  \"editor_user\": \"3fad6a89-8cec-4350\",\n  \"created\": \"2024-01-15T10:30:00Z\",\n  \"pieces\": [\n    {\n      \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"slot_slug\": \"top\",\n      \"design_id\": \"8a2b6517-e020-46fd-8cd0-ec441d4ac4b4\"\n    },\n    {\n      \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\",\n      \"slot_slug\": \"bottom\",\n      \"design_id\": \"5e39f63b-a084-4d80-ae29-1fdb87a79922\"\n    }\n  ],\n  \"previews\": [\n    {\n      \"name\": \"front\",\n      \"image\": \"https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/preview/\",\n      \"thumbnail\": \"https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/previews/c3d4e5f6-a7b8-9012-cdef-123456789012/thumbnail/\"\n    }\n  ],\n  \"scenes\": [\n    {\n      \"name\": \"default\",\n      \"url\": \"https://partner.embed.unmade.com/v2/outfits/f00f9780-e026-42f5-9876-41abb3619334/3d/default/\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5ec48138-cc5e-42a6-b650-4a5789713463",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit in the form of a uuid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"authentication_failed\",\n  \"message\": \"Incorrect authentication credentials.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "94dacfab-4be0-4938-86cf-a3e62a47c6d6",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit in the form of a uuid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"permission_denied\",\n  \"message\": \"You do not have permission to perform this action.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "db3585f1-e10a-46bf-b8ab-f4d975c65a0c",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit in the form of a uuid"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "e.g. Token ABCDEF",
+                    "key": "Authorization",
+                    "value": "Token ABCDEF"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7bcc74f4-9e11-4490-8800-9e30c083bb64",
+          "name": "Outfit Preview",
+          "request": {
+            "name": "Outfit Preview",
+            "description": {
+              "content": "Returns the full-size rendered image of the outfit for this preview.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "outfits",
+                ":outfit_id",
+                "previews",
+                ":preview_id",
+                "preview",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "outfit_id",
+                  "description": "(Required) ID of the Outfit"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "preview_id",
+                  "description": "(Required) ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2ad6b1b7-6f2a-4f57-8f98-09beafb715f2",
+              "name": "Permanent Redirect",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    "previews",
+                    ":preview_id",
+                    "preview",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "preview_id",
+                      "description": "(Required) ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Resume Incomplete",
+              "code": 308,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1ff5a4df-4455-4b77-89ae-aec9529d6143",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    "previews",
+                    ":preview_id",
+                    "preview",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "preview_id",
+                      "description": "(Required) ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4e958ab0-0bd9-4f50-9454-4a57c5209cac",
+          "name": "Outfit Thumbnail",
+          "request": {
+            "name": "Outfit Thumbnail",
+            "description": {
+              "content": "Returns a smaller thumbnail version of the outfit preview image.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "outfits",
+                ":outfit_id",
+                "previews",
+                ":preview_id",
+                "thumbnail",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "outfit_id",
+                  "description": "(Required) ID of the Outfit"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "preview_id",
+                  "description": "(Required) ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f73da71b-9494-42af-b60d-2a128374e236",
+              "name": "Permanent Redirect",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    "previews",
+                    ":preview_id",
+                    "thumbnail",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "preview_id",
+                      "description": "(Required) ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Resume Incomplete",
+              "code": 308,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "0d3670bb-7157-47a5-8975-05420d611f37",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    "previews",
+                    ":preview_id",
+                    "thumbnail",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "preview_id",
+                      "description": "(Required) ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a7915a35-58d2-4141-bf4d-0a8a04281ca8",
+          "name": "3D View",
+          "request": {
+            "name": "3D View",
+            "description": {
+              "content": "",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "outfits",
+                ":outfit_id",
+                "3d",
+                ":avatar_scene_slug",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "autosize",
+                  "value": "<boolean>",
+                  "description": "If true, the canvas resizes to fit the browser viewport."
+                },
+                {
+                  "disabled": false,
+                  "key": "interactive",
+                  "value": "<boolean>",
+                  "description": "If true, the model has limited mouse interactivity. Defaults to false."
+                },
+                {
+                  "disabled": false,
+                  "key": "autorotate",
+                  "value": "<number>",
+                  "description": "If provided, the model automatically rotates at 360 degrees in N seconds."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "outfit_id",
+                  "description": "(Required) ID of the Outfit"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "avatar_scene_slug",
+                  "description": "(Required) Slug of the avatar scene (obtained from the `scenes` array on the outfit)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b5961729-d674-4ea3-b07f-1d7abadab513",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    "3d",
+                    ":avatar_scene_slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "autosize",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "interactive",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "autorotate",
+                      "value": "<number>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "avatar_scene_slug",
+                      "description": "(Required) Slug of the avatar scene (obtained from the `scenes` array on the outfit)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9cd184d6-35f7-4c4c-bd77-5d6bbbe3ba20",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "outfits",
+                    ":outfit_id",
+                    "3d",
+                    ":avatar_scene_slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "autosize",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "interactive",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "autorotate",
+                      "value": "<number>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "outfit_id",
+                      "description": "(Required) ID of the Outfit"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "avatar_scene_slug",
+                      "description": "(Required) Slug of the avatar scene (obtained from the `scenes` array on the outfit)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://partner-subdomain.embed.unmade.com/",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "bb8ec424-e38d-4606-a43e-aafeb3ff9250",
+    "name": "Unmade Integration Reference Design API Outfit API API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Welcome to the Unmade OS Integration Reference.\n\nSee [Integrating With Unmade](#/group-integrating-with-unmade) to get started.",
+      "type": "text/plain"
+    }
+  }
+}

@@ -2,9 +2,9 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/unmade-embed-v2-openapi.json
-note: No official Unmade MCP server was found (docs, npm, MCP registries checked).
-  This is a candidate tool list derived one-to-one from the V2 Integration API
-  operations in the provider's published API Blueprint.
+note: No official Unmade MCP server was found (docs, npm, MCP registries checked). This is a candidate
+  tool list derived one-to-one from the V2 Integration API operations in the provider's published API
+  Blueprint.
 server:
   name: unmade
   transport: http
@@ -132,3 +132,9 @@ tools:
 - name: factory_set_job_ex_factory_date
   description: 'Factory API: set the ex-factory date on a job'
   source_operation: openapi/unmade-embed-v2-openapi.json#factoryOrdersJobsSetExFactoryDate
+deployment:
+  mode: none
+  verified: derived
+  tools: 41
+  checked: '2026-08-12'
+  source: catalog MCP census

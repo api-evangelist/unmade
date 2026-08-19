@@ -1,0 +1,257 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unmade Integration Reference Design API API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Design API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/designs/:design_id/",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Design in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Retrieve a design"
+        },
+        {
+          "info": {
+            "name": "Create a member design",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/designs/base_design_id/roster/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "#### Roster field rules\n\nTo create a member design, a single `roster_member` object containing the required\nvalues for all roster fields in the template roster design is provided:"
+        },
+        {
+          "info": {
+            "name": "Retrieve a design",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/designs/:design_id/",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Design in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Retrieve a design"
+        },
+        {
+          "info": {
+            "name": "3D View",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/designs/:design_id/3d/",
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Design in the form of a uuid"
+              },
+              {
+                "name": "scene",
+                "value": "",
+                "type": "query",
+                "description": "The name of the camera position to load. If not provided, load the default camera position of the model."
+              },
+              {
+                "name": "autosize",
+                "value": "",
+                "type": "query",
+                "description": "If true, the canvas will be resized to fit the browser viewport and will resize if changed. If not provided, the canvas will remain at a fixed default size."
+              },
+              {
+                "name": "interactive",
+                "value": "",
+                "type": "query",
+                "description": "If true, the model will have some limited mouse interactivity. Defaults to false."
+              },
+              {
+                "name": "autorotate",
+                "value": "",
+                "type": "query",
+                "description": "If provided, the model will automatically rotate at a rate of 360 degrees in N seconds."
+              }
+            ]
+          },
+          "docs": "3D View"
+        },
+        {
+          "info": {
+            "name": "Clear Placements",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/designs/:design_id/clear_placements/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Design in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Clear Placements"
+        },
+        {
+          "info": {
+            "name": "Clear User Uploaded Placements",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/designs/:design_id/clear_user_uploaded_placements/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Design in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Clear User Uploaded Placements"
+        },
+        {
+          "info": {
+            "name": "Clone Design",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/designs/:design_id/clone/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Design in the form of a uuid"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Clone Design"
+        },
+        {
+          "info": {
+            "name": "Transfer Designs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/collections/:slug/transfer_designs/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path",
+                "description": "Slug of the Collection"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Transfer Designs"
+        },
+        {
+          "info": {
+            "name": "Create a member design",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/designs/base_design_id/roster/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "#### Roster field rules\n\nTo create a member design, a single `roster_member` object containing the required values for all roster fields in the \ntemplate roster design is provided:"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

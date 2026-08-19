@@ -1,0 +1,136 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unmade Integration Reference Design API Unmade Editor API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Unmade Editor",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Iframe endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/products/:slug/",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path",
+                "description": "The product slug (will be agreed with you)"
+              },
+              {
+                "name": "price",
+                "value": "",
+                "type": "query",
+                "description": "The price to display for the product"
+              },
+              {
+                "name": "ccy",
+                "value": "",
+                "type": "query",
+                "description": "The ISO 4217 currency code corresponding to the `price`"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "The IETF language tag to set localisation of the user interface"
+              },
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "query",
+                "description": "An Unmade Design ID that is compatible with this editor to be used as starting point"
+              },
+              {
+                "name": "init",
+                "value": "",
+                "type": "query",
+                "description": "An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](https://engineering.unmade.com/api-docs/#/group-api-setup#header-advanced-setup) for more information."
+              },
+              {
+                "name": "mode",
+                "value": "",
+                "type": "query",
+                "description": "Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design."
+              }
+            ]
+          },
+          "docs": "The response to this request is a well-formed HTML document used as content for the `<iframe>`.\n\nUse this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an\nexternal e-commerce website.  Note that there are optional query parameters.\n\nDepending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on"
+        },
+        {
+          "info": {
+            "name": "Iframe endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/products/:slug/",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path",
+                "description": "The product slug (will be agreed with you)"
+              },
+              {
+                "name": "price",
+                "value": "",
+                "type": "query",
+                "description": "The price to display for the product"
+              },
+              {
+                "name": "ccy",
+                "value": "",
+                "type": "query",
+                "description": "The ISO 4217 currency code corresponding to the `price`"
+              },
+              {
+                "name": "locale",
+                "value": "",
+                "type": "query",
+                "description": "The IETF language tag to set localisation of the user interface"
+              },
+              {
+                "name": "design_id",
+                "value": "",
+                "type": "query",
+                "description": "An Unmade Design ID that is compatible with this editor to be used as starting point"
+              },
+              {
+                "name": "init",
+                "value": "",
+                "type": "query",
+                "description": "An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](#/group-api-setup#header-advanced-setup) for more information."
+              },
+              {
+                "name": "mode",
+                "value": "",
+                "type": "query",
+                "description": "Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design."
+              }
+            ]
+          },
+          "docs": "The response to this request is a well-formed HTML document used as content for the `<iframe>`.\n\nUse this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an\nexternal e-commerce website.  Note that there are optional query parameters.\n\nDepending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

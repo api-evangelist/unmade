@@ -1,0 +1,468 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unmade Integration Reference Design API Factory API API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Factory API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Sequences",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/factories/:factory_slug/sequences/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEFGHIJKLMNOPQRSTUVWXY"
+              }
+            ]
+          },
+          "docs": "Periodically, Unmade will automatically group created Jobs into efficient manufacturable Sequences. This is called \"Auto-sequencing\". These Sequences are created to:\n\n- Minimise manufacture time by grouping compatible Jobs - reducing the time spent reconfiguring machines\n\n- Make best use of available capacity by evenly distributing Jobs across available machines\n\nAuto-sequencing runs at regular intervals as agreed between you and Unmade.\n\nThis endpoint allows these Sequences to be retrieved when"
+        },
+        {
+          "info": {
+            "name": "Set a Sequence as 'in_production'",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/factories/:factory_slug/sequences/:sequence_id/set_in_production/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEFGHIJKLMNOPQRSTUVWXY"
+              }
+            ]
+          },
+          "docs": "Once manufacturing files have been successfully downloaded for a given Sequence, it should be marked as `in production`. This prevents the Sequence from appearing in subsequent calls to the “Get Sequences” endpoint.\nIf a Sequence has not been marked as `in_production`, it remains in the [Get Sequences](https://engineering.unmade.com/api-docs/#/group-factory-api/resource-v1-factories-factory_slug-sequences-690efc0e) list and its Jobs will be re-sequenced the next time auto-sequencing occurs. This"
+        },
+        {
+          "info": {
+            "name": "List Orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Show orders with this state (see Order States section above for allowed values)"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "created_before",
+                "value": "",
+                "type": "query",
+                "description": "Show orders created before this date (`YYYY-MM-DD`)"
+              },
+              {
+                "name": "created_after",
+                "value": "",
+                "type": "query",
+                "description": "Show orders created after this date (`YYYY-MM-DD`)"
+              },
+              {
+                "name": "submitted_before",
+                "value": "",
+                "type": "query",
+                "description": "Show orders submitted for manufacturing before this date (`YYYY-MM-DD`)"
+              },
+              {
+                "name": "submitted_after",
+                "value": "",
+                "type": "query",
+                "description": "Show orders submitted for manufacturing after this date (`YYYY-MM-DD`)"
+              },
+              {
+                "name": "ecommerce_origin (optional, string) - Show orders with `ecommerce_origin` containing specified string",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "reference",
+                "value": "",
+                "type": "query",
+                "description": "Show orders with `reference` containing specified string"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to retrieve the complete list of all orders that have been created to date.\n\nThis endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to \nselect the desired page.\n\nYou can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter \nthe listed orders by their creation date."
+        },
+        {
+          "info": {
+            "name": "Retrieve an existing order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "After an order has been submitted to production, you can use this endpoint to pull order data into your own systems or\nquery production states.\n\nThe `attachments` object contains URLs to any paperwork or documentation associated with this order.\n\n**Note**: Any `attachments` containing sensitive information such as customer shipping addresses will only be present\nin the response if the order is state `in_production` or `ready_to_ship`."
+        },
+        {
+          "info": {
+            "name": "Retrieve Shipping Address",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/shipping_address/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the \nshipping address for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an \nappropriate error message."
+        },
+        {
+          "info": {
+            "name": "Set In Production",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/set_in_production/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Once an order has been ingested into your systems and has entered production with your vendor, this endpoint is used to\ninform Unmade that production has begun. This state change is automatically propagated to the associated Ecommerce order\nto allow the end consumer to be notified if required. This state change also automatically propagates to all associated\njobs in this order."
+        },
+        {
+          "info": {
+            "name": "Set Ready to Ship",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/set_ready_to_ship/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Once an order has completed production and is ready to ship from your vendor, this endpoint is used to inform Unmade \nthat the order is ready to ship. This state change is automatically propagated to the associated Ecommerce order to \nallow the end consumer to be notified if required. This state change also automatically propagates to all associated\njobs in this order."
+        },
+        {
+          "info": {
+            "name": "Set Shipped",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/set_shipped/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Once an order has finally been shipped from your vendor, this endpoint is used to inform Unmade that the order is on the\nway to the destination address. This state change is automatically propagated to the associated Ecommerce order to \nallow the end consumer to be notified if required. This state change also automatically propagates to all associated\njobs in this order."
+        },
+        {
+          "info": {
+            "name": "Set Tracking Number",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/set_tracking_number/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "If relevant for the shipping configuration for your integration, this endpoint can be used to provide a tracking number\nthat has been generated in a third-party shipping system. If provided, this tracking number propagates up to this \norder's associated Ecommerce order to allow the Ecommerce system to pass it on to the end-consumer.\n\nThis endpoint can only be used if the given order is `ready_to_ship`."
+        },
+        {
+          "info": {
+            "name": "Set Order Ex-factory Date",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/set_ex_factory_date/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "On creation, Unmade assigns all production jobs an Ex-factory date based on a lead time estimate which has been \npre-agreed with you and your vendor. This serves as a target date by which the piece is expected to have left the \nfactory location. Jobs within an order can have different Ex-factory dates depending on per-product lead times. In the \ncase of unforeseen delays (or unexpectedly quicker production!) this endpoint can be used to pass an updated Ex-factory \ndate to Unmade. If provided, al"
+        },
+        {
+          "info": {
+            "name": "List Jobs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/jobs",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to retrieve a paginated list of the individual jobs associated with a given manufacturing \norder."
+        },
+        {
+          "info": {
+            "name": "Retrieve Job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/jobs/:job_id",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the job in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to retrieve data for a specific job in a given order. In addition to basic metadata, this \nendpoint provides:\n\n- Structured data describing the various customisation options chosen by the user for this job (eg. selected \n   **components**, **text** and **colours**)\n\n- URLs to one or more `previews` for this job\n\n- The URL for a zip file containing all manufacturing files for this job\n\n- The URL to this job's ticket PDF\n\n### Job States\n\nJobs flow through the same states "
+        },
+        {
+          "info": {
+            "name": "Set In Production",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/jobs/:job_id/set_in_production/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the job in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "If a given order consists of a large number of jobs, production for these jobs may begin at different times. In such a \ncase, it is possible to inform Unmade that individual jobs have begun production using this endpoint. This updates the \nstate of this job's order to `in_production`, but does not affect the state of the other jobs in this order."
+        },
+        {
+          "info": {
+            "name": "Set Ready to Ship",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/jobs/:job_id/set_ready_to_ship/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the job in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "If a given order consists of a large number of jobs, production for these jobs may be completed at different times. In \nsuch a case, it is possible to inform Unmade that individual jobs have completed production and are ready to ship using \nthis endpoint. When all jobs in a given order are `ready_to_ship`, the order itself is marked as `ready_to_ship`."
+        },
+        {
+          "info": {
+            "name": "Set Job Ex-factory Date",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/factory.unmade.com/v2/orders/:order_id/jobs/:job_id/set_ex_factory_date/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the job in the form of a uuid"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Just as an updated Ex-factory date can be provided for an entire order using the [Set Order Ex-Factory Date](#/group-factory-api/resource-factory.unmade.com-v2-orders-order_id-set_ex_factory_date-431ca688) \nendpoint, this endpoint can be used to provide updated dates for individual jobs within an order."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

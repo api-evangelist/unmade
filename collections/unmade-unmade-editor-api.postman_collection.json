@@ -1,0 +1,1155 @@
+{
+  "item": [
+    {
+      "id": "a1670ba1-40a2-405a-a13c-317ee9b77554",
+      "name": "Unmade Editor",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f97bba82-d139-4f98-9a33-2aa452b69e28",
+          "name": "Iframe endpoint",
+          "request": {
+            "name": "Iframe endpoint",
+            "description": {
+              "content": "The response to this request is a well-formed HTML document used as content for the `<iframe>`.\n\nUse this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an\nexternal e-commerce website.  Note that there are optional query parameters.\n\nDepending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on the page. We are happy to advise and support on this.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "products",
+                ":slug",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "price",
+                  "value": "<number>",
+                  "description": "The price to display for the product"
+                },
+                {
+                  "disabled": false,
+                  "key": "ccy",
+                  "value": "<string>",
+                  "description": "The ISO 4217 currency code corresponding to the `price`"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "en-GB",
+                  "description": "The IETF language tag to set localisation of the user interface"
+                },
+                {
+                  "disabled": false,
+                  "key": "design_id",
+                  "value": "<string>",
+                  "description": "An Unmade Design ID that is compatible with this editor to be used as starting point"
+                },
+                {
+                  "disabled": false,
+                  "key": "init",
+                  "value": "<string>",
+                  "description": "An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](https://engineering.unmade.com/api-docs/#/group-api-setup#header-advanced-setup) for more information."
+                },
+                {
+                  "disabled": false,
+                  "key": "mode",
+                  "value": "<string>",
+                  "description": "Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slug",
+                  "description": "(Required) The product slug (will be agreed with you)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "72c00600-8f31-4cd0-a96c-9adf79b0fc55",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a8244b19-13ff-4f43-8ca9-ce4e89b85ed2",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1080baf-23bf-4f20-a3f8-2be728c55e55",
+              "name": "Method Not Allowed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"method_not_allowed\",\n  \"message\": \"Method used is not allowed\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c4c71cbf-5f05-4cca-8f82-71c3c3cf9868",
+              "name": "Not Acceptable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_acceptable\",\n  \"message\": \"Could not satisfy the request Accept header.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "935c0012-8237-4c0b-8448-d84c21062c9c",
+              "name": "Unsupported Media Type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unsupported Media Type",
+              "code": 415,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unsupported_media_type\",\n  \"message\": \"Unsupported media type in request.\",\n  \"original_request\": \"Not able to parse the request: `Unsupported media type \\\"type sent\\\" in request.`\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27036312-2e42-4c4b-b30d-71fd0b6e1b85",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"throttle_request\",\n  \"message\": \"tRequest was throttled.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d0a31a46-c2ba-45ac-846c-7fcf68368265",
+          "name": "Iframe endpoint",
+          "request": {
+            "name": "Iframe endpoint",
+            "description": {
+              "content": "The response to this request is a well-formed HTML document used as content for the `<iframe>`.\n\nUse this URL as the `src` attribute value on an `<iframe>` element to embed an Unmade-powered product in an\nexternal e-commerce website.  Note that there are optional query parameters.\n\nDepending on your specific editor UI design and the rest of the content on the page you are embedding the Unmade Iframe on, you might need to take different approaches to managing the size of the `<iframe>` element on the page. We are happy to advise and support on this.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "products",
+                ":slug",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "price",
+                  "value": "<number>",
+                  "description": "The price to display for the product"
+                },
+                {
+                  "disabled": false,
+                  "key": "ccy",
+                  "value": "<string>",
+                  "description": "The ISO 4217 currency code corresponding to the `price`"
+                },
+                {
+                  "disabled": false,
+                  "key": "locale",
+                  "value": "en-GB",
+                  "description": "The IETF language tag to set localisation of the user interface"
+                },
+                {
+                  "disabled": false,
+                  "key": "design_id",
+                  "value": "<string>",
+                  "description": "An Unmade Design ID that is compatible with this editor to be used as starting point"
+                },
+                {
+                  "disabled": false,
+                  "key": "init",
+                  "value": "<string>",
+                  "description": "An JWT payload encrypted with your shared key which includes a unique identifier for your customer. See [advanced setup](#/group-api-setup#header-advanced-setup) for more information."
+                },
+                {
+                  "disabled": false,
+                  "key": "mode",
+                  "value": "<string>",
+                  "description": "Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "slug",
+                  "description": "(Required) The product slug (will be agreed with you)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "54499a88-07d0-43fc-bded-2ce796217ea6",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "02535b65-74d1-434e-bbea-0d419031c2df",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_found\",\n  \"message\": \"Not found.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fe9ec25f-7a7e-4df9-8790-f71b9841ce4d",
+              "name": "Method Not Allowed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"method_not_allowed\",\n  \"message\": \"Method used is not allowed\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2efa5db4-4e60-432e-a856-0c6a1b0cf58b",
+              "name": "Not Acceptable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"not_acceptable\",\n  \"message\": \"Could not satisfy the request Accept header.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b533b93-1196-4c56-beda-d45d236a73a5",
+              "name": "Unsupported Media Type",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unsupported Media Type",
+              "code": 415,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unsupported_media_type\",\n  \"message\": \"Unsupported media type in request.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "13e39849-cc2f-42ed-9d5f-a1b805438b6e",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "products",
+                    ":slug",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "price",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "ccy",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "locale",
+                      "value": "en-GB"
+                    },
+                    {
+                      "key": "design_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "init",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mode",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "slug",
+                      "description": "(Required) The product slug (will be agreed with you)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"throttle_request\",\n  \"message\": \"tRequest was throttled.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://partner-subdomain.embed.unmade.com/",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b6d9c7c7-bf4f-4536-ba18-cc06a2a05d63",
+    "name": "Unmade Integration Reference Design API Unmade Editor API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Welcome to the Unmade OS Integration Reference.\n\nSee [Integrating With Unmade](#/group-integrating-with-unmade) to get started.",
+      "type": "text/plain"
+    }
+  }
+}

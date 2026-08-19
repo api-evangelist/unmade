@@ -1,0 +1,516 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unmade Integration Reference Design API Ecommerce Orders API API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Ecommerce Orders API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/orders/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to retrieve the complete list of all orders that have been created to date.\n\nThis endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query\nparameter to select the desired page.\n\nYou can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD`\nto filter the listed orders by their creation date."
+        },
+        {
+          "info": {
+            "name": "Create an Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/orders/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "#### Order field rules\n\nFor an order to be created the following fields will need to be present:\n\n+ `reference` **required**: Cannot be blank and cannot exist already. Max chars: 256\n    + `shipping_address` **required object**: Object containing the following:\n        + `name` **required**: max chars: 256\n        + `address_1` **required**: max chars: 256\n        + `postal_code` **required**: max chars: 20\n        + `city` **required**: max chars: 256\n        + `country` **required**: must be a"
+        },
+        {
+          "info": {
+            "name": "Retrieve an existing order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/orders/:order_id/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "If you want to receive information on an order, for example to check the order state or the list of placeholders used by any of the designs on the order.\n\n#### Order Response\n\nWhen an order The order response will contain the following fields:\n\n+ `id`: Order id on UnmadeOS\n    + `reference`: Your order reference\n    + `state`: State of the order on UnmadeOS\n    + `created`: Timestamp when the order was created on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `submitted_at`: Timestamp when"
+        },
+        {
+          "info": {
+            "name": "Retrieve manufacturing files from an Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v1/orders/:order_id/manufacturing_files/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "If you want to download the manufacturing files from an order.\n\nNote: if the manufacturing files aren't available, the keys `job_ticket` and `manufacture_files` will be `null`, this is because the manufacturing files are generated\nasynchronously once the job is created."
+        },
+        {
+          "info": {
+            "name": "List Orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Show orders with this state (see Order States section above for allowed values)"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "created_before",
+                "value": "",
+                "type": "query",
+                "description": "Show orders created before this date (`YYYY-MM-DD`)"
+              },
+              {
+                "name": "created_after",
+                "value": "",
+                "type": "query",
+                "description": "Show orders created after this date (`YYYY-MM-DD`)"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to retrieve the complete list of all orders that have been created to date.\n\nThis endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to \nselect the desired page.\n\nYou can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter \nthe listed orders by their creation date."
+        },
+        {
+          "info": {
+            "name": "Create an Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Once an order has been placed on the ecommerce platform, the Unmade system should be notified to begin the process of\ngenerating manufacturing files. To do this, pass a unique order reference, and one or more order items to this endpoint\nvia an HTTP POST request. Each item must reference an Unmade Design ID. The same Design ID can be used for multiple\norder items, if provided with different `size` values inside the `options` object. To order multiple identical garments\nin the same size, use the "
+        },
+        {
+          "info": {
+            "name": "Retrieve an existing order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "After an order has been created, this endpoint can be used to retrieve order data for example to check the order state.\n\nDepending on the nature of your integration with Unmade, the contents of the `tracking_data` object may also update as \norders progress through the various production states."
+        },
+        {
+          "info": {
+            "name": "Retrieve an existing order Partner Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/partner_data/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "After an order has been created, this endpoint can be used to retrieve the contents of partner data of the order."
+        },
+        {
+          "info": {
+            "name": "Update Partner Data for existing order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/partner_data/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order,\nremoving any pre-existing key/values."
+        },
+        {
+          "info": {
+            "name": "Add key/values to Partner Data for existing order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/partner_data/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order."
+        },
+        {
+          "info": {
+            "name": "Retrieve shipping address for existing order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/shipping_address/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the\nshipping address  for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an\nappropriate error message."
+        },
+        {
+          "info": {
+            "name": "List Order Items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/items",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to retrieve a paginated list of the individual items in a given order. We preserve the order\nin which the items were sent in the original order creation payload. The `id` of each item is generated automatically\nby Unmade when the order is created. You may choose to store this ID in your systems in order to reference each item\ndirectly in future.\n\nEach order item has three associated Design IDs which have different relationships depending on how the relevant \ndesigns wer"
+        },
+        {
+          "info": {
+            "name": "Retrieve Order Item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/items/:item_id/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "item_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the item"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to retrieve data for a specific item in a given order. See the list representation for a more\ndetailed description of this data."
+        },
+        {
+          "info": {
+            "name": "Retrieve an existing order item Partner Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/items/:item_id/partner_data/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "item_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the item"
+              }
+            ]
+          },
+          "docs": "After an order has been created, this endpoint can be used to retrieve the contents of partner data for an order item."
+        },
+        {
+          "info": {
+            "name": "Update Partner Data for existing order item",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/items/:item_id/partner_data/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "item_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the item"
+              }
+            ]
+          },
+          "docs": "When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order item,\nremoving any pre-existing key/values."
+        },
+        {
+          "info": {
+            "name": "Add key/values for existing order item",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/items/:item_id/partner_data/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              },
+              {
+                "name": "item_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the item"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order item."
+        },
+        {
+          "info": {
+            "name": "Release Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/release_hold/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to release an order to production if their state is `hold`."
+        },
+        {
+          "info": {
+            "name": "Cancel Order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/orders/:order_id/set_cancelled/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Order in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "This endpoint can be used to cancel an order after creation. Depending on production and billing arrangements between\nyou, your vendor and Unmade, cancellation may not be possible if the order has progressed past a certain state. Contact\nUnmade for details of when cancellation is possible for your specific case."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

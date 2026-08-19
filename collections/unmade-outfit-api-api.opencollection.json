@@ -1,0 +1,165 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unmade Integration Reference Design API Outfit API API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Outfit API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create an Outfit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/outfits/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new outfit from a set of designs, one per slot defined by the given outfit spec.\n\nAll slots defined in the outfit spec must be provided. Providing an unknown slot or supplying two pieces for the same \nslot will return a 400 error."
+        },
+        {
+          "info": {
+            "name": "Retrieve an Outfit",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/outfits/:outfit_id/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": "Token ABCDEF"
+              }
+            ],
+            "params": [
+              {
+                "name": "outfit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Outfit in the form of a uuid"
+              }
+            ]
+          },
+          "docs": "Returns the full representation of an outfit, including its pieces, previews, and any available 3D scenes."
+        },
+        {
+          "info": {
+            "name": "Outfit Preview",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/outfits/:outfit_id/previews/:preview_id/preview/",
+            "params": [
+              {
+                "name": "outfit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Outfit"
+              },
+              {
+                "name": "preview_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+              }
+            ]
+          },
+          "docs": "Returns the full-size rendered image of the outfit for this preview."
+        },
+        {
+          "info": {
+            "name": "Outfit Thumbnail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/outfits/:outfit_id/previews/:preview_id/thumbnail/",
+            "params": [
+              {
+                "name": "outfit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Outfit"
+              },
+              {
+                "name": "preview_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the OutfitPreview (obtained from the `previews` array on the outfit)"
+              }
+            ]
+          },
+          "docs": "Returns a smaller thumbnail version of the outfit preview image."
+        },
+        {
+          "info": {
+            "name": "3D View",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-subdomain.embed.unmade.com/v2/outfits/:outfit_id/3d/:avatar_scene_slug/",
+            "params": [
+              {
+                "name": "outfit_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the Outfit"
+              },
+              {
+                "name": "avatar_scene_slug",
+                "value": "",
+                "type": "path",
+                "description": "Slug of the avatar scene (obtained from the `scenes` array on the outfit)"
+              },
+              {
+                "name": "autosize",
+                "value": "",
+                "type": "query",
+                "description": "If true, the canvas resizes to fit the browser viewport."
+              },
+              {
+                "name": "interactive",
+                "value": "",
+                "type": "query",
+                "description": "If true, the model has limited mouse interactivity. Defaults to false."
+              },
+              {
+                "name": "autorotate",
+                "value": "",
+                "type": "query",
+                "description": "If provided, the model automatically rotates at 360 degrees in N seconds."
+              }
+            ]
+          },
+          "docs": "3D View"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
