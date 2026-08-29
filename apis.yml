@@ -8,6 +8,17 @@ description: Unmade is a London fashion-tech company whose UnmadeOS platform let
   workflows through to shipping. Founded in 2013 and Techstars-backed, Unmade was
   acquired by garment manufacturer Hi-Tech Apparel in July 2024.
 url: https://raw.githubusercontent.com/api-evangelist/unmade/refs/heads/main/apis.yml
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
