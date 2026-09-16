@@ -1,12 +1,11 @@
 aid: unmade
 name: Unmade
-description: Unmade is a London fashion-tech company whose UnmadeOS platform lets
-  apparel and sportswear brands such as New Balance and Rapha sell customised,
-  on-demand products at scale. Its partner Integration API embeds the Unmade Editor
-  in e-commerce product pages, captures saved designs, renders previews and 3D
-  views, creates ecommerce orders from design IDs, and drives factory production
-  workflows through to shipping. Founded in 2013 and Techstars-backed, Unmade was
-  acquired by garment manufacturer Hi-Tech Apparel in July 2024.
+description: Unmade is a London fashion-tech company whose UnmadeOS platform lets apparel and sportswear
+  brands such as New Balance and Rapha sell customised, on-demand products at scale. Its partner Integration
+  API embeds the Unmade Editor in e-commerce product pages, captures saved designs, renders previews and
+  3D views, creates ecommerce orders from design IDs, and drives factory production workflows through
+  to shipping. Founded in 2013 and Techstars-backed, Unmade was acquired by garment manufacturer Hi-Tech
+  Apparel in July 2024.
 url: https://raw.githubusercontent.com/api-evangelist/unmade/refs/heads/main/apis.yml
 deliveryModel:
   model: unknown
@@ -49,7 +48,7 @@ x-enrichment:
   pass: local-v1
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-09-16'
 tags:
 - Fashion
 - Apparel
@@ -68,7 +67,7 @@ tags_raw:
 - Embedded Commerce
 apis:
 - aid: unmade:unmade-design-api-api
-  name: Unmade Design API API
+  name: Unmade Design API
   description: The Design API API from Unmade — 9 operation(s) for design api.
   humanURL: https://engineering.unmade.com/api-docs/v2.html
   baseURL: https://partner-subdomain.embed.unmade.com
@@ -86,7 +85,7 @@ apis:
   - type: Documentation
     url: https://engineering.unmade.com/api-docs/
 - aid: unmade:unmade-ecommerce-orders-api-api
-  name: Unmade Ecommerce Orders API API
+  name: Unmade Ecommerce Orders API
   description: The Ecommerce Orders API API from Unmade — 12 operation(s) for ecommerce orders api.
   humanURL: https://engineering.unmade.com/api-docs/v2.html
   baseURL: https://partner-subdomain.embed.unmade.com
@@ -104,7 +103,7 @@ apis:
   - type: Documentation
     url: https://engineering.unmade.com/api-docs/
 - aid: unmade:unmade-factory-api-api
-  name: Unmade Factory API API
+  name: Unmade Factory API
   description: The Factory API API from Unmade — 15 operation(s) for factory api.
   humanURL: https://engineering.unmade.com/api-docs/v2.html
   baseURL: https://partner-subdomain.embed.unmade.com
@@ -122,7 +121,7 @@ apis:
   - type: Documentation
     url: https://engineering.unmade.com/api-docs/
 - aid: unmade:unmade-outfit-api-api
-  name: Unmade Outfit API API
+  name: Unmade Outfit API
   description: The Outfit API API from Unmade — 5 operation(s) for outfit api.
   humanURL: https://engineering.unmade.com/api-docs/v2.html
   baseURL: https://partner-subdomain.embed.unmade.com
@@ -140,7 +139,7 @@ apis:
   - type: Documentation
     url: https://engineering.unmade.com/api-docs/
 - aid: unmade:unmade-transfer-preview-api-api
-  name: Unmade Transfer Preview API API
+  name: Unmade Transfer Preview API
   description: The Transfer Preview API API from Unmade — 2 operation(s) for transfer preview api.
   humanURL: https://engineering.unmade.com/api-docs/v2.html
   baseURL: https://partner-subdomain.embed.unmade.com
@@ -158,7 +157,7 @@ apis:
   - type: Documentation
     url: https://engineering.unmade.com/api-docs/
 - aid: unmade:unmade-unmade-editor-api
-  name: Unmade Unmade Editor API
+  name: Unmade Editor API
   description: The Unmade Editor API from Unmade — 2 operation(s) for unmade editor.
   humanURL: https://engineering.unmade.com/api-docs/v2.html
   baseURL: https://partner-subdomain.embed.unmade.com
@@ -205,7 +204,10 @@ common:
   url: well-known/unmade-well-known.yml
 - type: X-MCPServerCandidate
   url: mcp/unmade-mcp.yml
-  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate
+    — a tool list derived from the published API contracts, not an existing server. The scorer already
+    read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type
+    surfaces with a server that does not exist.'
 - type: Conformance
   url: conformance/unmade-conformance.yml
 - type: ErrorCatalog
