@@ -1,16 +1,10 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Unmade Integration Reference Design API Ecommerce Orders API API
+  title: Unmade Ecommerce Orders API
   version: 1.0.0
-  description: 'Welcome to the Unmade OS Integration Reference.
-
-
-    See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.'
-  x-apievangelist:
-    generated: '2026-07-21'
-    method: derived
-    source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary.apib
-    note: Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file.
+  x-refined-note:
+  - x-apievangelist differs across the merged source definitions and was not carried
+  description: 'Operations tagged Ecommerce Orders API across 2 of this provider''s published API definitions: unmade-embed-v1-openapi.json, unmade-embed-v2-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://partner-subdomain.embed.unmade.com/
 security:
@@ -190,7 +184,55 @@ paths:
                     original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
       summary: Create an Order
       operationId: createOrders
-      description: "#### Order field rules\n\nFor an order to be created the following fields will need to be present:\n\n+ `reference` **required**: Cannot be blank and cannot exist already. Max chars: 256\n    + `shipping_address` **required object**: Object containing the following:\n        + `name` **required**: max chars: 256\n        + `address_1` **required**: max chars: 256\n        + `postal_code` **required**: max chars: 20\n        + `city` **required**: max chars: 256\n        + `country` **required**: must be an ISO 3166-1 country\n        + `company_name` *optional*: max chars: 256\n        + `address_2` *optional*: max chars: 256\n        + `country_area` *optional*: max chars: 128\n        + `phone` *optional*: max chars: 30\n        + `email` *optional*: max chars: 254\n    + `order_items` **required array**: Array where each item has:\n        + `design` **required**: The Unmade Design Id of the design to be ordered\n        + `reference` *optional*: Defaults to `\"\"`\n        + `quantity` *optional*: Defaults to *1*\n        + `unit_price` *optional*: Float with 10 maximum digits and 2 decimal places\n        + `currency` *optional*: Currency code in ISO 4217 format. Defaults to `USD`\n        + `options` *optional*: Object that can include:\n            + `size` *optional*: Pre-agreed values, usually: \"XXS\", \"XS\", \"S\", \"M\", \"L\", \"XL\", \"XXL\", \"3XL\", \"One Size\"\n            + `partner_data` *optional*: Undetermined key value pairs (order item level). These keys and values can be added to Unmade paperwork (job and/or order tickets) if the keys are configured in UnmadeOS\n    + `partner_data` *optional*: Undetermined key value pairs (order level). These keys and values can be added to Unmade paperwork (job and/or order tickets) if the keys are configured in UnmadeOS"
+      description: '#### Order field rules
+
+
+        For an order to be created the following fields will need to be present:
+
+
+        + `reference` **required**: Cannot be blank and cannot exist already. Max chars: 256
+
+        + `shipping_address` **required object**: Object containing the following:
+
+        + `name` **required**: max chars: 256
+
+        + `address_1` **required**: max chars: 256
+
+        + `postal_code` **required**: max chars: 20
+
+        + `city` **required**: max chars: 256
+
+        + `country` **required**: must be an ISO 3166-1 country
+
+        + `company_name` *optional*: max chars: 256
+
+        + `address_2` *optional*: max chars: 256
+
+        + `country_area` *optional*: max chars: 128
+
+        + `phone` *optional*: max chars: 30
+
+        + `email` *optional*: max chars: 254
+
+        + `order_items` **required array**: Array where each item has:
+
+        + `design` **required**: The Unmade Design Id of the design to be ordered
+
+        + `reference` *optional*: Defaults to `""`
+
+        + `quantity` *optional*: Defaults to *1*
+
+        + `unit_price` *optional*: Float with 10 maximum digits and 2 decimal places
+
+        + `currency` *optional*: Currency code in ISO 4217 format. Defaults to `USD`
+
+        + `options` *optional*: Object that can include:
+
+        + `size` *optional*: Pre-agreed values, usually: "XXS", "XS", "S", "M", "L", "XL", "XXL", "3XL", "One Size"
+
+        + `partner_data` *optional*: Undetermined key value pairs (order item level). These keys and values can be added to Unmade paperwork (job and/or order tickets) if the keys are configured in UnmadeOS
+
+        + `partner_data` *optional*: Undetermined key value pairs (order level). These keys and values can be added to Unmade paperwork (job and/or order tickets) if the keys are configured in UnmadeOS'
       tags:
       - Ecommerce Orders API
       parameters:
@@ -304,8 +346,7 @@ paths:
                     type: number
                   next:
                     type: string
-                  previous:
-                    nullable: true
+                  previous: {}
                   results:
                     type: array
                     items:
@@ -353,14 +394,10 @@ paths:
                           type: string
                         is_order_portal:
                           type: boolean
-                        submitted_at:
-                          nullable: true
-                        ready_to_ship_at:
-                          nullable: true
-                        shipped_at:
-                          nullable: true
-                        factory_order_id:
-                          nullable: true
+                        submitted_at: {}
+                        ready_to_ship_at: {}
+                        shipped_at: {}
+                        factory_order_id: {}
               example:
                 count: 10
                 next: https://example.embed.unmade.com/v1/orders/?page=2
@@ -412,6 +449,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v1/orders/{order_id}/:
     get:
       responses:
@@ -529,7 +568,102 @@ paths:
                 original_request: 'Not able to parse the request: `Unsupported media type "type sent" in request.`'
       summary: Retrieve an existing order
       operationId: getOrders2
-      description: "If you want to receive information on an order, for example to check the order state or the list of placeholders used by any of the designs on the order.\n\n#### Order Response\n\nWhen an order The order response will contain the following fields:\n\n+ `id`: Order id on UnmadeOS\n    + `reference`: Your order reference\n    + `state`: State of the order on UnmadeOS\n    + `created`: Timestamp when the order was created on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `submitted_at`: Timestamp when the order was submitted on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `ready_to_ship_at`: Timestamp when the order was set as ready to ship on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `shipped_at`: Timestamp when the order was shipped on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n    + `partner_data`:  Undetermined key value pairs sent on order creation\n    + `tracking_number`:  If the order has been shipped and the vendor has enter the tracking number\n    + `shipping_address`:  Object containing the address received\n    + `placeholder_logos`:  Array containing the placeholders logos used by any design present on the order, if none is present will be an empty array\n        + `original_logo_url`:  URL where the logo was uploaded and from where it can be retrieved\n        + `designs`: Array of designs that use the logo\n            + `design`:  Unmade Design ID\n            + `placements`:  Array of placement names of the design where the logo is used\n    + `order_items`: Array where each item has:\n        + `design`: Design id that corresponds with the line order in the exact size\n        + `reference`:  Optional reference sent defaults to `\"\"`\n        + `quantity`:  Positive number, defaults to *1* if none was sent\n        + `unit_price`:  Float with 10 maximum digits and 2 decimal places it can be null\n        + `currency`:  Currency code in ISO 4217 format. Defaults to `USD`\n        + `arrive_by_date`:  Timestamp for when the order needs to arrive to the customer on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n        + `ex_factory_date`:   Timestamp for when the order needs to leave the factory on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*\n        + `options`:  Object that includes the `size`\n        + `factory`:  Factory where the garment will be manufactured\n        + `partner_data`:  Undetermined key value pairs. It will contain the *UNMADE_SOURCE_DESIGN_ID* key automatically generated by UnmadeOS to track which was the base design for this order line item. And *UNMADE_ORDER_ITEM_DESIGN_ID* another key included automatically that represents the design of the line item with the size fulfilled and any roster customisations\n\n#### Order States\n\nAs an order progresses through its life-cycle it will adopt one of a number of order states.\nThe state of an order is provided on an order's `state` attribute and will be one of the\nfollowing values:\n\n+ `new`: This order has been received by Unmade, but is not in production yet\n    + `submitting`: This order is being sent to the factory for production\n    + `submitted`: This order has been sent to the factory for production\n    + `in_production`: The manufacturing of the order has started at the factory\n    + `ready_to_ship`: This order is waiting to be picked up at the factory\n    + `shipped`: The factory has marked this order as shipped\n    + `cancelled`: This order has been cancelled\n    + `hold`: This order is on hold\n    + `failed`: This order has failed. (Error state, please contact Unmade)\n\nIf you have set your factory up to provide a tracking number for each shipment\nvia Factory OMS then this information will be reflected in the `tracking_number`\nattribute of the order once it has been entered by the factory."
+      description: 'If you want to receive information on an order, for example to check the order state or the list of placeholders used by any of the designs on the order.
+
+
+        #### Order Response
+
+
+        When an order The order response will contain the following fields:
+
+
+        + `id`: Order id on UnmadeOS
+
+        + `reference`: Your order reference
+
+        + `state`: State of the order on UnmadeOS
+
+        + `created`: Timestamp when the order was created on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*
+
+        + `submitted_at`: Timestamp when the order was submitted on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*
+
+        + `ready_to_ship_at`: Timestamp when the order was set as ready to ship on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*
+
+        + `shipped_at`: Timestamp when the order was shipped on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*
+
+        + `partner_data`: Undetermined key value pairs sent on order creation
+
+        + `tracking_number`: If the order has been shipped and the vendor has enter the tracking number
+
+        + `shipping_address`: Object containing the address received
+
+        + `placeholder_logos`: Array containing the placeholders logos used by any design present on the order, if none is present will be an empty array
+
+        + `original_logo_url`: URL where the logo was uploaded and from where it can be retrieved
+
+        + `designs`: Array of designs that use the logo
+
+        + `design`: Unmade Design ID
+
+        + `placements`: Array of placement names of the design where the logo is used
+
+        + `order_items`: Array where each item has:
+
+        + `design`: Design id that corresponds with the line order in the exact size
+
+        + `reference`: Optional reference sent defaults to `""`
+
+        + `quantity`: Positive number, defaults to *1* if none was sent
+
+        + `unit_price`: Float with 10 maximum digits and 2 decimal places it can be null
+
+        + `currency`: Currency code in ISO 4217 format. Defaults to `USD`
+
+        + `arrive_by_date`: Timestamp for when the order needs to arrive to the customer on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*
+
+        + `ex_factory_date`: Timestamp for when the order needs to leave the factory on ISO 8601 UTC time i.e.: *2022-04-28T15:32:21Z*
+
+        + `options`: Object that includes the `size`
+
+        + `factory`: Factory where the garment will be manufactured
+
+        + `partner_data`: Undetermined key value pairs. It will contain the *UNMADE_SOURCE_DESIGN_ID* key automatically generated by UnmadeOS to track which was the base design for this order line item. And *UNMADE_ORDER_ITEM_DESIGN_ID* another key included automatically that represents the design of the line item with the size fulfilled and any roster customisations
+
+
+        #### Order States
+
+
+        As an order progresses through its life-cycle it will adopt one of a number of order states.
+
+        The state of an order is provided on an order''s `state` attribute and will be one of the
+
+        following values:
+
+
+        + `new`: This order has been received by Unmade, but is not in production yet
+
+        + `submitting`: This order is being sent to the factory for production
+
+        + `submitted`: This order has been sent to the factory for production
+
+        + `in_production`: The manufacturing of the order has started at the factory
+
+        + `ready_to_ship`: This order is waiting to be picked up at the factory
+
+        + `shipped`: The factory has marked this order as shipped
+
+        + `cancelled`: This order has been cancelled
+
+        + `hold`: This order is on hold
+
+        + `failed`: This order has failed. (Error state, please contact Unmade)
+
+
+        If you have set your factory up to provide a tracking number for each shipment
+
+        via Factory OMS then this information will be reflected in the `tracking_number`
+
+        attribute of the order once it has been entered by the factory.'
       tags:
       - Ecommerce Orders API
       parameters:
@@ -546,6 +680,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v1/orders/{order_id}/manufacturing_files/:
     get:
       responses:
@@ -683,6 +819,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/:
     post:
       responses:
@@ -790,7 +928,40 @@ paths:
                 message: Unsupported media type in request.
       summary: Create an Order
       operationId: createOrders
-      description: "Once an order has been placed on the ecommerce platform, the Unmade system should be notified to begin the process of\ngenerating manufacturing files. To do this, pass a unique order reference, and one or more order items to this endpoint\nvia an HTTP POST request. Each item must reference an Unmade Design ID. The same Design ID can be used for multiple\norder items, if provided with different `size` values inside the `options` object. To order multiple identical garments\nin the same size, use the `quantity` value. Each item must also have a `unit_price` object with both a `value` and\n`currency` specified. Depending on the nature of your integration with Unmade, a `shipping_address` may also be required\nfor order creation.\n\nOptionally, arbitrary key-value pairs can be passed as a `partner_data` object at both the order and order item level. \nThis may be used by your system to provide your internal ID or similar reference for this order which may be relevant\nfor integration with your vendor. These key-value pairs will also be present on the manufacturing order and jobs \nassociated with this ecommerce order.\n\nIf you want to create the order and keep it on hold for subsequent updates to the `partner_data` you might do it by\nsending the boolean value for `set_order_on_hold` as `true`.\n\nYou may optionally provide a boolean value for the `is_test_order` field to indicate a given order is not a real\nproduction order. If this value is set to `true`, the order will be omitted from Unmade billing processes. Speak to your\nUnmade representative for more information about recommended integration testing procedures."
+      description: 'Once an order has been placed on the ecommerce platform, the Unmade system should be notified to begin the process of
+
+        generating manufacturing files. To do this, pass a unique order reference, and one or more order items to this endpoint
+
+        via an HTTP POST request. Each item must reference an Unmade Design ID. The same Design ID can be used for multiple
+
+        order items, if provided with different `size` values inside the `options` object. To order multiple identical garments
+
+        in the same size, use the `quantity` value. Each item must also have a `unit_price` object with both a `value` and
+
+        `currency` specified. Depending on the nature of your integration with Unmade, a `shipping_address` may also be required
+
+        for order creation.
+
+
+        Optionally, arbitrary key-value pairs can be passed as a `partner_data` object at both the order and order item level.
+
+        This may be used by your system to provide your internal ID or similar reference for this order which may be relevant
+
+        for integration with your vendor. These key-value pairs will also be present on the manufacturing order and jobs
+
+        associated with this ecommerce order.
+
+
+        If you want to create the order and keep it on hold for subsequent updates to the `partner_data` you might do it by
+
+        sending the boolean value for `set_order_on_hold` as `true`.
+
+
+        You may optionally provide a boolean value for the `is_test_order` field to indicate a given order is not a real
+
+        production order. If this value is set to `true`, the order will be omitted from Unmade billing processes. Speak to your
+
+        Unmade representative for more information about recommended integration testing procedures.'
       tags:
       - Ecommerce Orders API
       parameters:
@@ -898,7 +1069,17 @@ paths:
           content: {}
       summary: List Orders
       operationId: getOrders
-      description: "This endpoint can be used to retrieve the complete list of all orders that have been created to date.\n\nThis endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to \nselect the desired page.\n\nYou can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter \nthe listed orders by their creation date."
+      description: 'This endpoint can be used to retrieve the complete list of all orders that have been created to date.
+
+
+        This endpoint is paginated and shows a maximum of 10 order objects per response. Use the `page` query parameter to
+
+        select the desired page.
+
+
+        You can optionally provide `created_before` and `created_after` query parameters in the format `YYYY-MM-DD` to filter
+
+        the listed orders by their creation date.'
       tags:
       - Ecommerce Orders API
       parameters:
@@ -929,6 +1110,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/:
     get:
       responses:
@@ -950,10 +1133,8 @@ paths:
                     type: string
                   in_production:
                     type: string
-                  ready_to_ship:
-                    nullable: true
-                  shipped:
-                    nullable: true
+                  ready_to_ship: {}
+                  shipped: {}
                   num_items:
                     type: number
                   order_items:
@@ -1029,7 +1210,12 @@ paths:
           content: {}
       summary: Retrieve an existing order
       operationId: getOrders2
-      description: "After an order has been created, this endpoint can be used to retrieve order data for example to check the order state.\n\nDepending on the nature of your integration with Unmade, the contents of the `tracking_data` object may also update as \norders progress through the various production states."
+      description: 'After an order has been created, this endpoint can be used to retrieve order data for example to check the order state.
+
+
+        Depending on the nature of your integration with Unmade, the contents of the `tracking_data` object may also update as
+
+        orders progress through the various production states.'
       tags:
       - Ecommerce Orders API
       parameters:
@@ -1046,6 +1232,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/partner_data/:
     get:
       responses:
@@ -1160,7 +1348,7 @@ paths:
           content: {}
       summary: Add key/values to Partner Data for existing order
       operationId: patchOrdersPartnerData
-      description: When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order.
+      description: When an order is in `hold` state, this endpoint can be used to add further key/values to the existing ones for the order.
       tags:
       - Ecommerce Orders API
       parameters:
@@ -1237,7 +1425,7 @@ paths:
           content: {}
       summary: Update Partner Data for existing order
       operationId: updateOrdersPartnerData
-      description: 'When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order,
+      description: 'When an order is in `hold` state, this endpoint can be used to update the whole partner data key/values of the order,
 
         removing any pre-existing key/values.'
       tags:
@@ -1256,6 +1444,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/shipping_address/:
     get:
       responses:
@@ -1330,7 +1520,7 @@ paths:
       operationId: getOrdersShippingAddress
       description: 'When an order has progressed to the `in_production` or `ready_to_ship` states, this endpoint can be used to retrieve the
 
-        shipping address  for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an
+        shipping address for the order. For orders not in this state, this endpoint will respond with an HTTP 400 with an
 
         appropriate error message.'
       tags:
@@ -1349,6 +1539,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/items:
     get:
       responses:
@@ -1358,7 +1550,42 @@ paths:
           content: {}
       summary: List Order Items
       operationId: getOrdersItems
-      description: "This endpoint can be used to retrieve a paginated list of the individual items in a given order. We preserve the order\nin which the items were sent in the original order creation payload. The `id` of each item is generated automatically\nby Unmade when the order is created. You may choose to store this ID in your systems in order to reference each item\ndirectly in future.\n\nEach order item has three associated Design IDs which have different relationships depending on how the relevant \ndesigns were created, as well as the type of order. In the simplest case these Design IDs may be identical, but will \nusually be different, depending on a variety of factors.\n\n- `input_design_id`: The Design ID which you originally sent in the Order creation payload to create this item\n\n- `manufacturing_design_id`: The ID of the design which is being used as the source of all manufacturing data for this \n    item. This will be different to the `input_design_id` if you specified a different size to that of the order \n    item design: in this case Unmade will generate a new design in the specified size\n\n- `source_design_id`: The ID of the Design which was originally saved by the user in the editor. If the Roster API has \n    been used to create the member design for this item, this ID will be the ID of the original roster **template** \n    design.\n\nThese Design IDs can be used in the Design API to view personalisation data or fetch previews relevant to this order \nitem. In most cases you'll want to use the `design_id` value for this purpose."
+      description: 'This endpoint can be used to retrieve a paginated list of the individual items in a given order. We preserve the order
+
+        in which the items were sent in the original order creation payload. The `id` of each item is generated automatically
+
+        by Unmade when the order is created. You may choose to store this ID in your systems in order to reference each item
+
+        directly in future.
+
+
+        Each order item has three associated Design IDs which have different relationships depending on how the relevant
+
+        designs were created, as well as the type of order. In the simplest case these Design IDs may be identical, but will
+
+        usually be different, depending on a variety of factors.
+
+
+        - `input_design_id`: The Design ID which you originally sent in the Order creation payload to create this item
+
+
+        - `manufacturing_design_id`: The ID of the design which is being used as the source of all manufacturing data for this
+
+        item. This will be different to the `input_design_id` if you specified a different size to that of the order
+
+        item design: in this case Unmade will generate a new design in the specified size
+
+
+        - `source_design_id`: The ID of the Design which was originally saved by the user in the editor. If the Roster API has
+
+        been used to create the member design for this item, this ID will be the ID of the original roster **template**
+
+        design.
+
+
+        These Design IDs can be used in the Design API to view personalisation data or fetch previews relevant to this order
+
+        item. In most cases you''ll want to use the `design_id` value for this purpose.'
       tags:
       - Ecommerce Orders API
       parameters:
@@ -1380,6 +1607,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/items/{item_id}/:
     get:
       responses:
@@ -1414,6 +1643,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/items/{item_id}/partner_data/:
     get:
       responses:
@@ -1549,7 +1780,7 @@ paths:
           content: {}
       summary: Add key/values for existing order item
       operationId: patchOrdersItemsPartnerData
-      description: When an order is in  `hold` state, this endpoint can be used to add further key/values to the existing ones for the order item.
+      description: When an order is in `hold` state, this endpoint can be used to add further key/values to the existing ones for the order item.
       tags:
       - Ecommerce Orders API
       parameters:
@@ -1632,7 +1863,7 @@ paths:
           content: {}
       summary: Update Partner Data for existing order item
       operationId: updateOrdersItemsPartnerData
-      description: 'When an order is in  `hold` state, this endpoint can be used to update the whole partner data key/values of the order item,
+      description: 'When an order is in `hold` state, this endpoint can be used to update the whole partner data key/values of the order item,
 
         removing any pre-existing key/values.'
       tags:
@@ -1657,6 +1888,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/release_hold/:
     post:
       responses:
@@ -1709,6 +1942,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/set_cancelled/:
     post:
       responses:
@@ -1765,6 +2000,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
 components:
   securitySchemes:
     tokenAuth:
@@ -1772,3 +2009,6 @@ components:
       in: header
       name: Authorization
       description: 'Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash.'
+x-refined-from:
+- unmade-embed-v1-openapi.json
+- unmade-embed-v2-openapi.json

@@ -1,16 +1,10 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Unmade Integration Reference Design API Transfer Preview API API
+  title: Unmade Transfer Preview API
   version: 1.0.0
-  description: 'Welcome to the Unmade OS Integration Reference.
-
-
-    See [Integrating With Unmade](#/group-integrating-with-unmade) to get started.'
-  x-apievangelist:
-    generated: '2026-07-21'
-    method: derived
-    source: https://raw.githubusercontent.com/unmadeworks/api-docs/master/apiary.apib
-    note: Converted mechanically from the provider's published API Blueprint with apib2swagger, then operationIds/tags/securityScheme added mechanically. The verbatim API Blueprint source is saved alongside this file.
+  x-refined-note:
+  - x-apievangelist differs across the merged source definitions and was not carried
+  description: 'Operations tagged Transfer Preview API across 2 of this provider''s published API definitions: unmade-embed-v1-openapi.json, unmade-embed-v2-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://partner-subdomain.embed.unmade.com/
 security:
@@ -126,6 +120,8 @@ paths:
                   type: string
                 design:
                   type: string
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
   /v2/transfer_previews/:
     post:
       responses:
@@ -209,6 +205,8 @@ paths:
               required:
               - product
               - design
+    servers:
+    - url: https://partner-subdomain.embed.unmade.com/
 components:
   securitySchemes:
     tokenAuth:
@@ -216,3 +214,6 @@ components:
       in: header
       name: Authorization
       description: 'Token authentication. Unmade provides your unique token; send it as `Authorization: Token <token>`. All API URLs are partner-specific subdomains and every endpoint URL must end with a trailing slash.'
+x-refined-from:
+- unmade-embed-v1-openapi.json
+- unmade-embed-v2-openapi.json

@@ -1,24 +1,37 @@
 {
   "provider": "unmade",
   "sources": [
-    "unmade-design-api-api-openapi.yml",
-    "unmade-ecommerce-orders-api-api-openapi.yml",
-    "unmade-factory-api-api-openapi.yml",
-    "unmade-outfit-api-api-openapi.yml",
-    "unmade-transfer-preview-api-api-openapi.yml",
-    "unmade-unmade-editor-api-openapi.yml"
+    "_original/unmade-embed-v1-openapi.json",
+    "_original/unmade-embed-v2-openapi.json"
   ],
   "outputs": [
     "unmade-design-api-api-openapi.yml",
     "unmade-ecommerce-orders-api-api-openapi.yml",
     "unmade-factory-api-api-openapi.yml",
-    "unmade-outfit-api-api-openapi.yml",
     "unmade-transfer-preview-api-api-openapi.yml",
-    "unmade-unmade-editor-api-openapi.yml"
+    "unmade-unmade-editor-api-openapi.yml",
+    "unmade-outfit-api-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "unmade-embed-v1-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "unmade-embed-v2-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "tag 'Design API' spans 2 source specs (unmade-embed-v1-openapi.json, unmade-embed-v2-openapi.json): per-path servers applied",
+    "tag 'Ecommerce Orders API' spans 2 source specs (unmade-embed-v1-openapi.json, unmade-embed-v2-openapi.json): per-path servers applied",
+    "tag 'Factory API' spans 2 source specs (unmade-embed-v1-openapi.json, unmade-embed-v2-openapi.json): per-path servers applied",
+    "tag 'Transfer Preview API' spans 2 source specs (unmade-embed-v1-openapi.json, unmade-embed-v2-openapi.json): per-path servers applied",
+    "tag 'Unmade Editor' spans 2 source specs (unmade-embed-v1-openapi.json, unmade-embed-v2-openapi.json): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "unmade-design-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unmade-ecommerce-orders-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unmade-factory-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unmade-outfit-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unmade-transfer-preview-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unmade-unmade-editor-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
