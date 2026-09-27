@@ -233,7 +233,7 @@ paths:
                 code: throttle_request
                 message: tRequest was throttled.
       summary: Iframe endpoint
-      operationId: getProducts
+      operationId: getV2ProductsBySlug
       description: 'The response to this request is a well-formed HTML document used as content for the ``.
 
 
@@ -283,6 +283,8 @@ paths:
         description: Specifying `mode=admin` will enable additional UI controls, including the ability to lock elements of the design.
         schema:
           type: string
+      x-operation-id-source: normalized
+      x-operation-id-original: getProducts
     servers:
     - url: https://partner-subdomain.embed.unmade.com/
 components:

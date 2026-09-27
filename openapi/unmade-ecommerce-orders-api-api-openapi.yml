@@ -927,7 +927,7 @@ paths:
                 code: unsupported_media_type
                 message: Unsupported media type in request.
       summary: Create an Order
-      operationId: createOrders
+      operationId: postV2Orders
       description: 'Once an order has been placed on the ecommerce platform, the Unmade system should be notified to begin the process of
 
         generating manufacturing files. To do this, pass a unique order reference, and one or more order items to this endpoint
@@ -1061,6 +1061,8 @@ paths:
               - reference
               - order_items
               - shipping_address
+      x-operation-id-source: normalized
+      x-operation-id-original: createOrders
     get:
       responses:
         '200':
@@ -1068,7 +1070,7 @@ paths:
           headers: {}
           content: {}
       summary: List Orders
-      operationId: getOrders
+      operationId: getV2Orders
       description: 'This endpoint can be used to retrieve the complete list of all orders that have been created to date.
 
 
@@ -1110,6 +1112,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+      x-operation-id-source: normalized
+      x-operation-id-original: getOrders
     servers:
     - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/:
@@ -1209,7 +1213,7 @@ paths:
           headers: {}
           content: {}
       summary: Retrieve an existing order
-      operationId: getOrders2
+      operationId: getV2OrdersByOrderId
       description: 'After an order has been created, this endpoint can be used to retrieve order data for example to check the order state.
 
 
@@ -1232,6 +1236,8 @@ paths:
         schema:
           type: string
         example: Token ABCDEF
+      x-operation-id-source: normalized
+      x-operation-id-original: getOrders2
     servers:
     - url: https://partner-subdomain.embed.unmade.com/
   /v2/orders/{order_id}/partner_data/:

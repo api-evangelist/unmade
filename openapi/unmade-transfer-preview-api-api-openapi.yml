@@ -175,7 +175,7 @@ paths:
                 code: method_not_allowed
                 message: Method used is not allowed
       summary: Create Transfer Previews
-      operationId: transferPreviews
+      operationId: postV2TransferPreviews
       description: ''
       tags:
       - Transfer Preview API
@@ -205,6 +205,8 @@ paths:
               required:
               - product
               - design
+      x-operation-id-source: normalized
+      x-operation-id-original: transferPreviews
     servers:
     - url: https://partner-subdomain.embed.unmade.com/
 components:
