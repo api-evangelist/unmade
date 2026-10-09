@@ -3,7 +3,7 @@ name: Embed the Unmade Editor and create an order from a saved design
 description: The core 4-step Unmade integration — embed the customisation editor,
   capture the Design ID, create an ecommerce order after checkout, then track it.
 api: openapi/unmade-embed-v2-openapi.json
-operations: [getProducts, getDesigns, createOrders, getOrders2, ordersReleaseHold]
+operations: [getV2ProductsBySlug, getV2DesignsByDesignId, postV2Orders, getV2OrdersByOrderId, ordersReleaseHold]
 generated: '2026-07-21'
 method: generated
 ---

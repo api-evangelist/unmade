@@ -3,7 +3,7 @@ name: Render design previews across products
 description: Retrieve a saved design, transfer-preview it onto other products for
   cross-sell imagery, and show its 3D view.
 api: openapi/unmade-embed-v2-openapi.json
-operations: [getDesigns, transferPreviews, getDesigns3d]
+operations: [getV2DesignsByDesignId, postV2TransferPreviews, getDesigns3d]
 generated: '2026-07-21'
 method: generated
 ---
