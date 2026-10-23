@@ -1,5 +1,5 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/unmade/integrations
 - https://n8n.io/integrations/unmade/
@@ -10,7 +10,25 @@ checked:
 - https://monid.ai/tools/unmade
 - https://n8n.io/integrations/unmade/
 - https://zapier.com/apps/unmade/integrations
+- adobe-illustrator/integrations/adobe-illustrator-integration-edges.yml
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: Adobe Illustrator (own)
+  partner: adobe-illustrator
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://exchange.adobe.com/apps/cc/205947/unmadeos-layplan-extension
+  mirror_of: adobe-illustrator/integrations/adobe-illustrator-integration-edges.yml
+  apps:
+  - UnmadeOS Layplan Extension
+  listing_count: 1
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Adobe Exchange Creative Cloud listing (Illustrator)
 templates: []
